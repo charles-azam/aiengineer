@@ -11,9 +11,14 @@ dependencies = [
     "aider-chat",
     "litellm>=1.68.1",
     "pyforge",
-    "smolagents[bedrock]>=1.16.0",
+    "smolagents[bedrock,gradio]>=1.16.0",
     "aider-chat>=0.83",
     "duckduckgo-search>=8.0.2",
+    "selenium>=4.32.0",
+    "helium>=5.1.1",
+    "pillow>=11.2.1",
+    "ipykernel>=6.29.5",
+    "markdownify>=1.1.0",
 ]
 
 [project.scripts]

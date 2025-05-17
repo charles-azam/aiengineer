@@ -12,6 +12,7 @@ dependencies = [
     "litellm>=1.68.1",
     "pyforge",
     "smolagents>=1.15.0",
+    "aider-chat>=0.83",
 ]
 
 [project.scripts]
@@ -21,5 +22,9 @@ aiengineer = "aiengineer:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+
 [tool.uv.sources]
-pyforge = { git = "https://github.com/charloupioupiou/pyforge", rev = "main" }
+pyforge = { path = "../pyforge", editable = true }
+aider-chat = { path = "../aider", editable = true }
+smolagents = { path = "../smolagents", editable = true }
+

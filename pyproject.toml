@@ -11,8 +11,9 @@ dependencies = [
     "aider-chat",
     "litellm>=1.68.1",
     "pyforge",
-    "smolagents>=1.15.0",
+    "smolagents[bedrock]>=1.16.0",
     "aider-chat>=0.83",
+    "duckduckgo-search>=8.0.2",
 ]
 
 [project.scripts]
@@ -22,6 +23,8 @@ aiengineer = "aiengineer:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+override-dependencies = ["huggingface-hub>=0.31.2"]
 
 [tool.uv.sources]
 pyforge = { path = "../pyforge", editable = true }

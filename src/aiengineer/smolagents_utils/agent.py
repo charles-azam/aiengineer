@@ -1,5 +1,5 @@
 from smolagents import tool
-from aiengineer.smolagents_utils.tools import ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool, get_all_print_outputs_tool
+from aiengineer.smolagents_utils.tools import get_codebase_as_markdown_tool, ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool, get_all_print_outputs_tool
 from smolagents import (
     CodeAgent,
     ToolCallingAgent,
@@ -11,8 +11,21 @@ from smolagents import (
 model = LiteLLMModel("openai/gpt-4o") 
 
 manager_agent = CodeAgent(
-    tools=[ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool, get_all_print_outputs_tool],
+    tools=[get_codebase_as_markdown_tool, ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool, get_all_print_outputs_tool],
     model=model,
     additional_authorized_imports=["time", "numpy", "pandas"],
 )
-answer = manager_agent.run("If LLM training continues to scale up at the current rhythm until 2030, what would be the electric power in GW required to power the biggest training runs by 2030? What would that correspond to, compared to some countries? Please provide a source for any numbers used.")
+answer = manager_agent.run("""
+Let's build a small modular reactor of around 20 MW to generate electricity.
+We want a design that is as detailed as possible so that we know what to buy to our providers.
+Our design must be cheap and easy to industrialize. We require at least three high-level systems: the reactor, the primary loop and the secondary loop.
+
+You goal will be to use the tools to modify the codebase. You will act as a manager agent.
+
+You can get access to the codebase as a markdown string using the tool get_codebase_as_markdown_tool.
+Along with the outputs from the print statements in the codebase using the tool get_all_print_outputs_tool,
+you can ask the agent to modify the codebase using the tool ask_coder_modification_on_repo_tool.
+
+You
+
+""")

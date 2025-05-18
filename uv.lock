@@ -442,8 +442,11 @@ dependencies = [
     { name = "markdownify" },
     { name = "pillow" },
     { name = "pyforge" },
+    { name = "pyyaml" },
+    { name = "rich" },
     { name = "selenium" },
     { name = "smolagents", extra = ["bedrock", "gradio"] },
+    { name = "typer" },
 ]
 
 [package.metadata]
@@ -456,8 +459,11 @@ requires-dist = [
     { name = "markdownify", specifier = ">=1.1.0" },
     { name = "pillow", specifier = ">=11.2.1" },
     { name = "pyforge", editable = "../pyforge" },
+    { name = "pyyaml", specifier = ">=6.0.1" },
+    { name = "rich", specifier = ">=13.7.0" },
     { name = "selenium", specifier = ">=4.32.0" },
     { name = "smolagents", extras = ["bedrock", "gradio"], editable = "../smolagents" },
+    { name = "typer", extras = ["all"], specifier = ">=0.9.0" },
 ]
 
 [[package]]

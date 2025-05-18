@@ -1,15 +1,14 @@
 from pathlib import Path
 
-from rich.pretty import d
 from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, fix_repository, RepoAsObject
 from aiengineer.tools.engineer_agent import run_engineer_agent
 from aiengineer.template.nuclear_reactor import CONFIG_REACTOR, PROMPT_REACTOR
-from aiengineer.prompts import get_prompt_ai_engineer
+from aiengineer.prompts import get_prompt_ai_engineer_smolagents
 
 
 from smolagents import tool
 
-SYSTEM_PROMPT = get_prompt_ai_engineer(repo_name=CONFIG_REACTOR.repo_path.name)
+SYSTEM_PROMPT = get_prompt_ai_engineer_smolagents(repo_name=CONFIG_REACTOR.repo_path.name)
 REPO_PATH = CONFIG_REACTOR.repo_path
 LITELLM_ID = CONFIG_REACTOR.litellm_id
 
@@ -40,6 +39,18 @@ def ask_coder_fix_the_code_tool() -> None:
     while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")
+        
+@tool
+def get_codebase_as_markdown_tool() -> str:
+    """Returns the codebase as a markdown string.
+
+    Returns:
+        The codebase as a markdown string.
+    """
+    
+    # Call the LLM on the repository with the question
+    repo = RepoAsObject.from_directory(repo_path=REPO_PATH)
+    return repo.to_markdown()
         
 @tool
 def get_all_print_outputs_tool() -> str:

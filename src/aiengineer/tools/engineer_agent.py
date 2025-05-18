@@ -16,5 +16,13 @@ def iterative_engineering_process(repo_path: Path, question: str, system_prompt:
         repo = RepoAsObject.from_directory(repo_path=repo_path)
         outputs = repo.get_outputs_on_files(with_outputs=True, with_errors=True)
         if outputs:
-            question = question + outputs.convert_to_flat_txt() + "End of outputs"
+            question = f"""
+Outputs from the previous iteration:
+{outputs.convert_to_flat_txt()}
+End of outputs
+
+Question:
+{question}
+"""
+            
         run_engineer_agent(question=question, repo_path=repo_path, system_prompt=system_prompt, litellm_id=litellm_id)

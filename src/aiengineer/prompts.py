@@ -15,7 +15,8 @@ You can write as many files as you want following this structure:
 - `tools_*.py` for helper functions or domain-specific utilities.
 - `design.py` for the main design file that ties everything together.
 
-The `design.py` file is the main entry point for the design process. It is a python written document (more on that later) that should import all of the other files and ues them to describe the design.
+The `design.py` file is the main entry point for the design process. It is a python written document that should import all of the other files and use them to describe the design.
+This document should be written using `pyforge.note`. Take example from the design.py file below.
 
 Do not hesitate to add prints, the print will be given as inputs to the next iteration (do not put them in a if __name__=="__main__" statement otherwise they will be ignored)
 

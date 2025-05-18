@@ -186,16 +186,16 @@ class RepoAsObject(BaseModel):
             os.makedirs(file.file_path.parent, exist_ok=True)
             file.file_path.write_text(file.file_content)
 
-    def save_to_markdown(self, output_path: Path, summary: bool = False):
-        assert output_path.suffix == ".md"
-        with open(output_path, "w") as f:
-            for file in self.files:
-                f.write(f"# {file.file_path_str}\n")
-                if summary:
-                    f.write(file.file_summary.replace("#", "##"))
-                else:
-                    f.write(file.file_content.replace("#", "##"))
-                f.write("\n")
+    def to_markdown(self) -> str:
+        outputs = []
+        for file in self.files:
+            outputs.append(f"""
+**{file.file_path_str}**:
+```python
+{file.file_content}
+```
+""")
+        return "\n".join(outputs)
 
     def to_repo_as_json(self, summary: bool = False) -> RepoAsJson:
         json_files = [f.to_file_as_json(summary=summary) for f in self.files]

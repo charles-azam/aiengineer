@@ -1,3 +1,5 @@
+from aiengineer.tools.parse_repository import RepoAsObject
+
 
 _PROMPT_AI_ENGINEER = r'''
 You are a highly specialized hardware engineering assistant. Your currently in an infinite for loop in which you want to keep improving our design. All of your data will be written in python.
@@ -41,107 +43,7 @@ The `pyforge` library is designed to help engineers manage the complexity of sys
 
 Here is an example of how to use the `pyforge` library:
 
-```python
-from pyforge import Parameters, System, Requirement
-
-class BridgeParameter(Parameters):
-    length: Quantity = Quantity(120, "m")
-    height: Quantity = Quantity(15, "m")
-    width: Quantity = Quantity(12, "m")
-    deck_thickness: Quantity = Quantity(0.25, "m")
-    design_life: int = 40
-
-BRIDGE_PARAMS = BridgeParameter()
-
-root_system = System(name = "Bridge")
-
-structural_system = System(
-    name="Structural System",
-    description=(
-        f"Spans {BRIDGE_PARAMS.length.value}{BRIDGE_PARAMS.length.units} at "
-        f"{BRIDGE_PARAMS.height.value}{BRIDGE_PARAMS.height.units} high, "
-        f"with a {BRIDGE_PARAMS.deck_thickness.value}{BRIDGE_PARAMS.deck_thickness.units}-thick deck."
-    ),
-    requirements=[
-        Requirement(
-            name="Load Capacity",
-            description=(
-                f"Must safely carry traffic for {BRIDGE_PARAMS.design_life} years "
-                f"across a {BRIDGE_PARAMS.width.value}{BRIDGE_PARAMS.width.units} wide deck."
-            )
-        ),
-    ]
-)
-
-safety_system = System(
-    name="Safety System",
-    description=(
-        f"Provides railings, walkways along the {BRIDGE_PARAMS.length.value}{BRIDGE_PARAMS.length.units} span."
-    ),
-    requirements=[
-        Requirement(
-            name="Guardrail Height",
-            description=(
-                f"Minimum 1.2 m tall railings at {BRIDGE_PARAMS.height.value}"
-                f"{BRIDGE_PARAMS.height.units} above ground."
-            )
-        )
-    ]
-)
-# systems form a tree
-root_system.add_children(safety_system)
-root_system.add_children(structural_system)
-
-```
-
-The `design.py` file is supposed to become the final report, linked to the rest of the files, here is how you can write documents using pyforge:
-```python
-from pathlib import Path
-
-import pandas as pd
-
-from pyforge.note import (Citation, DocumentConfig, Figure, Reference, Table,
-                          Title, display)
-
-# Document configuration
-config = DocumentConfig(
-    title="Example PyForge Document", author="PyForge User", date="2025-05-16"
-)
-display(config)
-
-# Create a sample dataframe for demonstration
-df = pd.DataFrame(
-    {
-        "Name": ["Alice", "Bob", "Charlie"],
-        "Age": [25, 30, 35],
-        "City": ["New York", "London", "Paris"],
-    }
-)
-
-display(
-    """
-# Introduction
-This is an example document created with PyForge. It demonstrates how to use various components like titles, figures, tables, and citations.
-
-## Pyforge Overview
-PyForge allows you to write documents in Python with a syntax similar to markdown. You can include regular markdown text as strings, and use special classes for figures, tables, and other elements.
-  
-## Create sample figure      
-        """
-)
-
-display(Figure(path_to_figure / "logo.png", "Sample figure", "figure-sample"))
-
-display(
-    Table(df, "Sample data table", "table-sample"),
-    "You can reference the table above using a Reference object.",
-    Reference("table-sample", "Table 1"),
-    "You can also include citations like this:",
-    Citation("smith2023", "Smith et al. (2023)"),
-    Title("# Conclusion"),
-    "This example demonstrates the basic functionality of PyForge for document creation.",
-)
-```
+{examples_in_markdown}
 
 Please remember that all files are inside a repository so all imports must start with from {repo_name}, {repo_name} has already been created for you.
 
@@ -174,7 +76,13 @@ Here is a list of errors per file:
 
 
 def get_prompt_ai_engineer(repo_name: str):
-    return _PROMPT_AI_ENGINEER.replace(r"{repo_name}", repo_name)
+    from pyforge.common import ROOT_PYFORGE_DIR
+
+    example_path = ROOT_PYFORGE_DIR / "src/pyforge/examples/heat_pump"
+    repo_as_object = RepoAsObject.from_directory(example_path)
+    examples_in_markdown = repo_as_object.to_markdown()
+    
+    return _PROMPT_AI_ENGINEER.replace(r"{repo_name}", repo_name).replace(r"{examples_in_markdown}", examples_in_markdown)
 
 def get_prompt_fix_repository(repo_name: str):
     return _PROMPT_FIX_REPOSITORY.replace(r"{repo_name}", repo_name)

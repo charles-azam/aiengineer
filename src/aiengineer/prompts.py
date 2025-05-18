@@ -92,7 +92,7 @@ safety_system = System(
 root_system.add_children(safety_system)
 root_system.add_children(structural_system)
 
-```python
+```
 
 The `design.py` file is supposed to become the final report, linked to the rest of the files, here is how you can write documents using pyforge:
 ```python

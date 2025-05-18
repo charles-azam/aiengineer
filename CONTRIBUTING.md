@@ -13,7 +13,7 @@ Please be respectful and considerate of others when contributing to this project
 3. Set up the development environment:
    ```bash
    cd .. # parent folder to aiengineer
-   git clone https://github.com/charloupioupiou/pyforge.git
+   git clone https://github.com/charles-azam/pyforge.git
    git clone https://github.com/Aider-AI/aider.git
    git clone https://github.com/huggingface/smolagents.git
    export DEV_MODE=1

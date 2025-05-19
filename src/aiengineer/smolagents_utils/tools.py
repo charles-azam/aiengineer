@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from yaml import DocumentStartEvent
+
 from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, fix_repository, RepoAsObject
 from aiengineer.tools.engineer_agent import run_engineer_agent
 from aiengineer.template.nuclear_reactor import CONFIG_REACTOR, PROMPT_REACTOR
@@ -12,6 +14,14 @@ SYSTEM_PROMPT = get_prompt_ai_engineer_smolagents(repo_name=CONFIG_REACTOR.repo_
 REPO_PATH = CONFIG_REACTOR.repo_path
 LITELLM_ID = CONFIG_REACTOR.litellm_id
 
+# Ideas:
+# - le format de base de données sont les Documents 
+# - on a un document principal qui sera donné en prépromt
+# - c'est le document en markdown qui est donné à l'agent principal
+# - on a un agent maître qui choisit ce qu'il faut faire et des agents secondaires qui lancent des simulations
+# - on a une fonction afin d'initialiser le projet avec des exemples
+# - réfléchir à une structure simple pour les infos avec des simu autonomes'
+# - add test with calls to smolagents "call this tool" and check the logs
 @tool
 def ask_coder_modification_on_repo_tool(question: str) -> None:
     """Asks a question to another agent that will modify the repository according to the instructions in the question.
@@ -20,6 +30,7 @@ def ask_coder_modification_on_repo_tool(question: str) -> None:
         question: The question to ask to the agent.
     """
     
+    i = 0
     while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")
@@ -27,6 +38,7 @@ def ask_coder_modification_on_repo_tool(question: str) -> None:
     # Call the LLM on the repository with the question
     run_engineer_agent(question=question, system_prompt=SYSTEM_PROMPT, repo_path=REPO_PATH, litellm_id=CONFIG_REACTOR.litellm_id, )
 
+    i = 0
     while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")

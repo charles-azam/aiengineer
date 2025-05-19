@@ -14,6 +14,7 @@ manager_agent = CodeAgent(
     tools=[get_codebase_as_markdown_tool, ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool, get_all_print_outputs_tool],
     model=model,
     additional_authorized_imports=["time", "numpy", "pandas"],
+    max_steps=20,
 )
 answer = manager_agent.run("""
 Let's build a small modular reactor of around 20 MW to generate electricity.

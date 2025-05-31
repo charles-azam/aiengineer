@@ -124,21 +124,4 @@ def test_fix_repository_2():
         message = get_prompt_fix_repository(repo_name=repo_path.name)
         message += problems.convert_to_flat_txt()
 
-def coucou_test_fixing_repo():
-    from shutil import rmtree
-
-    rmtree(TEST_PATH)
-    create_empty_repo(TEST_PATH)
-
-    repo = RepoAsObject.from_directory(repo_path=TEST_PATH)
-    testing_repo = repo.get_outputs_on_files(with_errors=True, with_outputs=True)
-    assert len(testing_repo.files) == 1
-    fix_repository(repo_path=TEST_PATH)
-    fix_repository(repo_path=TEST_PATH)
-    repo = RepoAsObject.from_directory(repo_path=TEST_PATH)
-    testing_repo = repo.get_outputs_on_files()
-    assert testing_repo is None
-    pass
-    rmtree(TEST_PATH)
-    create_empty_repo(TEST_PATH)
     

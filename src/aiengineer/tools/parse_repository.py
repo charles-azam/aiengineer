@@ -46,26 +46,8 @@ You must answer with only the modified files, where "name" is the file name and 
     
     files: list[FileAsJson] = Field(description="List of files in the repo")
 
-    def merge(self, answer: RepoAsJson) -> RepoAsJson:
-        original = self
-        new_files = []
-        original_files = original._to_dict()
-        answer_files = answer._to_dict()
-        for file_name, original_file in original_files.items():
-            if file_name in answer_files:
-                if answer_files[file_name].content is not None:
-                    new_files.append(answer_files[file_name])
-            else:
-                new_files.append(original_file)
 
-        # add new files in answer files
-        for file in answer_files:
-            if file not in original_files:
-                new_files.append(answer_files[file])
-
-        return RepoAsJson(files=new_files)
-
-    def _to_dict(self):
+    def to_dict(self) -> dict[str, FileAsJson]:
         output = {}
         for file in self.files:
             if file.name in output:
@@ -79,7 +61,7 @@ You must answer with only the modified files, where "name" is the file name and 
     def convert_to_flat_txt(self) -> str:
         message = ""
         for file in self.files:
-            message += f"{file.name}: \n"
+            message += f"\n\n**{file.name}**: \n"
             message += file.content
         return message
 

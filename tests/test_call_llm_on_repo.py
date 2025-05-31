@@ -1,4 +1,4 @@
-from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_code, clean_after_test
+from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_non_working_code, clean_after_test
 import shutil
 from pathlib import Path
 from aider.repo import GitRepo
@@ -80,17 +80,16 @@ Create three files in a directory named call_llm_on_repo_with_folder:
     clean_after_test()
     
 def test_fix_repository():
-    initialise_folder_with_code()
+    initialise_folder_with_non_working_code()
     problems = fix_repository(repo_path=TESTING_PATH, litellm_id=TESTING_MODEL, edit_format="diff")
     problems = fix_repository(repo_path=TESTING_PATH, litellm_id=TESTING_MODEL, edit_format="diff")
     assert problems is None
     from testing.fix_repository.conversion import masse_g
     assert masse_g == 10000
     clean_after_test()
-
     
 def test_get_repo_as_json_output():
-    initialise_folder_with_code()
+    initialise_folder_with_non_working_code()
     repo_as_json = get_repo_as_json_output(with_errors=True, with_outputs=True, repo_path=TESTING_PATH)
     repo_as_dict = repo_as_json.to_dict()
     assert "10" in repo_as_dict["fix_repository/values.py"].content
@@ -98,7 +97,7 @@ def test_get_repo_as_json_output():
     clean_after_test()
     
 def test_get_python_errors_in_repository():
-    initialise_folder_with_code()
+    initialise_folder_with_non_working_code()
     message = get_python_errors_in_repository(repo_path=TESTING_PATH)
     assert message.strip() == """
 
@@ -125,7 +124,7 @@ ModuleNotFoundError: No module named \'fix_repository\'
     clean_after_test()
     
 def test_get_print_outputs_in_repository():
-    initialise_folder_with_code()
+    initialise_folder_with_non_working_code()
     message = get_print_outputs_in_repository(repo_path=TESTING_PATH)
     assert message.strip() == """
 

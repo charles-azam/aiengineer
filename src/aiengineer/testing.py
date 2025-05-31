@@ -30,7 +30,7 @@ def clean_after_test(testing_path: Path = TESTING_PATH):
     testing_path.mkdir(parents=True, exist_ok=True)
     (testing_path / "__init__.py").touch()
     
-def initialise_folder_with_code() -> Path:
+def initialise_folder_with_non_working_code() -> Path:
     testing_dir = TESTING_PATH / "fix_repository"
     initialise_empty_folder(testing_dir)
     
@@ -46,6 +46,36 @@ def convert_kg_to_g(a: float):
 masse_g = convert_kg_to_g(masse_kg)
 
 assert masse_g*1000 == masse_kg       
+    """
+        )
+    file = testing_dir / "values.py"
+    file.write_text(
+    """
+masse_kg = 10
+print(masse_kg)
+    """
+        )
+    return testing_dir
+
+def initialise_folder_with_working_code() -> Path:
+    testing_dir = TESTING_PATH / "test_working_code"
+    initialise_empty_folder(testing_dir)
+    
+    file = testing_dir / "conversion.py"
+    file.write_text(
+    """
+# Conversion module for mass units
+from testing.test_working_code.values import masse_kg
+
+# Convert kg to pounds
+def kg_to_pounds(kg_value):
+    return kg_value * 2.20462
+
+# Debug statement
+print("DEBUG: conversion.py loaded successfully")
+print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
+print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
+    
     """
         )
     file = testing_dir / "values.py"

@@ -1,4 +1,5 @@
 from ast import main
+from operator import add
 from aider.coders import Coder
 from aider.models import Model
 from aider.io import InputOutput
@@ -65,28 +66,44 @@ def get_print_outputs_in_repository(repo_path: Path) -> str:
     return repo_as_json.convert_to_flat_txt()
 
 
-def fix_repository(repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> RepoAsJson | None:
+def fix_repository(repo_path: Path, litellm_id :str, additional_context_or_instructions: str = "", repo_name: str | None = None, edit_format: str = "diff") -> RepoAsJson | None:
     task_template = """
-The python code in the repository is incorrect. Your job is to fix them. 
+## Fix Python code in repository:
 
-Please remember that all files are inside a repository so all imports must start with from {repo_name}.
+The code in the repository `{repo_name}` contains errors. Fix these issues with the following guidelines:
 
-You are inside an interation so do not hesite to add some prints for the next iteration
-Here is a list of errors per file:
+- **Absolute Imports:** Ensure all imports within the repository use absolute imports starting explicitly with `from {repo_name}.`
+  ✗ Avoid: `import module`, `from .module import x`, etc.
+  ✓ Correct: `from {repo_name}.module import x`
+
+- **Common fixes needed:** Resolve import errors, `NameError`, `SyntaxError`, and other issues listed explicitly below.
+
+- **Debugging statements:** Add clear and helpful `print()` statements as necessary to facilitate debugging in future iterations. Clearly indicate their purpose.
+
+## Errors to fix:
+{errors_to_fix}
+
+"""
+    additional_context_or_instructions_template = """
+
+## Additional context or instructions:
+{additional_context_or_instructions}
 """
 
     
     repo_name = repo_name or repo_path.name
-    
-    message = task_template.format(repo_name=repo_name)
-    
-    problems = get_python_errors_in_repository(repo_path=repo_path)
+        
+    problems = get_repo_as_json_output(repo_path=repo_path, with_errors=True, with_outputs=False)
 
     if problems:
+        output_message = get_python_errors_in_repository(repo_path=repo_path)
         logger.warning("❌ Trying and fix the problem")
-        logger.warning(problems.convert_to_flat_txt())
+        logger.warning(output_message)
         
-        message += problems.convert_to_flat_txt()
+        message = task_template.format(repo_name=repo_name, errors_to_fix=output_message)
+        if additional_context_or_instructions:
+            additional_context_or_instructions_message = additional_context_or_instructions_template.format(additional_context_or_instructions=additional_context_or_instructions)
+            message += "\n" + additional_context_or_instructions_message
         call_llm_on_repo(message=message, repo_path=repo_path, litellm_id=litellm_id, repo_name=repo_name, edit_format=edit_format)
     else:
         logger.info("✅ no Problems found ")

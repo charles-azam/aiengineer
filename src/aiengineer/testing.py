@@ -25,6 +25,11 @@ def initialise_empty_folder(folder_path: Path):
     (folder_path / "__init__.py").touch()
     (folder_path.parent / "__init__.py").touch()
     
+def clean_after_test(testing_path: Path = TESTING_PATH):
+    shutil.rmtree(testing_path, ignore_errors=True)
+    testing_path.mkdir(parents=True, exist_ok=True)
+    (testing_path / "__init__.py").touch()
+    
 def initialise_folder_with_code() -> Path:
     testing_dir = TESTING_PATH / "fix_repository"
     initialise_empty_folder(testing_dir)

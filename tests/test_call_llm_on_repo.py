@@ -80,10 +80,14 @@ Create three files in a directory named call_llm_on_repo_with_folder:
     clean_after_test()
     
 def test_fix_repository():
-    testing_dir = initialise_folder_with_code()
-    fix_repository(repo_path=testing_dir, litellm_id=TESTING_MODEL, edit_format="diff")
+    initialise_folder_with_code()
+    problems = fix_repository(repo_path=TESTING_PATH, litellm_id=TESTING_MODEL, edit_format="diff")
+    problems = fix_repository(repo_path=TESTING_PATH, litellm_id=TESTING_MODEL, edit_format="diff")
+    assert problems is None
+    from testing.fix_repository.conversion import masse_g
+    assert masse_g == 10000
     clean_after_test()
-    
+
     
 def test_get_repo_as_json_output():
     initialise_folder_with_code()

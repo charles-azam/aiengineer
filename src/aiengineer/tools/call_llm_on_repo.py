@@ -68,7 +68,7 @@ Here is a list of errors per file:
     
     repo_name = repo_name or repo_path.name
     
-    task = task_template.format(repo_name=repo_name)
+    message = task_template.format(repo_name=repo_name)
 
     if problems:
         logger.warning("❌ Trying and fix the problem")

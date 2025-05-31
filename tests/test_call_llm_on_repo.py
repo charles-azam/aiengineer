@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 from aider.repo import GitRepo
 
-from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files
+from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files, RepoAsObject, RepoAsJson, get_prompt_fix_repository
 
 def initialise_folder(folder_path: Path):
     shutil.rmtree(folder_path, ignore_errors=True)
@@ -110,13 +110,19 @@ Create three files in a directory named call_llm_on_repo_with_folder:
     assert c == 3
     
 def test_fix_repository():
-
     testing_dir = initialise_folder_for_testing()
     from aiengineer.tools.call_llm_on_repo import fix_repository
     fix_repository(repo_path=testing_dir, litellm_id=TESTING_MODEL, edit_format="diff")
     
+def test_fix_repository_2():
+    repo = RepoAsObject.from_directory(repo_path=repo_path)
+    problems: RepoAsJson = repo.get_outputs_on_files(with_errors=True, with_outputs=False)
 
-
+    if problems:
+        print("❌ Trying and fix the problem")
+        print(problems.convert_to_flat_txt())
+        message = get_prompt_fix_repository(repo_name=repo_path.name)
+        message += problems.convert_to_flat_txt()
 
 def coucou_test_fixing_repo():
     from shutil import rmtree

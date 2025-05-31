@@ -110,14 +110,6 @@ Bellow, you will find the prompt asked by the manager agent:
 
 '''
 
-_PROMPT_FIX_REPOSITORY = r"""
-The python code in the repository is incorrect. Your job is to fix them. 
-
-Please remember that all files are inside a repository so all imports must start with from {repo_name}.
-
-You are inside an interation so do not hesite to add some prints for the next iteration
-Here is a list of errors per file:
-"""
 
 
 def get_prompt_ai_engineer(repo_name: str):
@@ -137,6 +129,3 @@ def get_prompt_ai_engineer_smolagents(repo_name: str):
     examples_in_markdown = repo_as_object.to_markdown()
     
     return _PROMPT_AI_ENGINEER_SMOLAGENTS.replace(r"{repo_name}", repo_name).replace(r"{examples_in_markdown}", examples_in_markdown)
-
-def get_prompt_fix_repository(repo_name: str):
-    return _PROMPT_FIX_REPOSITORY.replace(r"{repo_name}", repo_name)

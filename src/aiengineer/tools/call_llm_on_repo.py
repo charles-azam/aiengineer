@@ -4,8 +4,8 @@ from aider.models import Model
 from aider.io import InputOutput
 from pathlib import Path
 from aiengineer.tools.parse_repository import RepoAsJson, RepoAsObject
-from aiengineer.prompts import get_prompt_fix_repository    
-
+import logging
+logger = logging.getLogger(__name__)
 
 def call_llm_on_repo_with_files(message: str, fnames: list[Path], repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> None:
     assert repo_path.is_dir()
@@ -56,15 +56,28 @@ def call_llm_on_repo(message: str, repo_path: Path, litellm_id :str, repo_name: 
 def fix_repository(repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> RepoAsJson | None:
     repo = RepoAsObject.from_directory(repo_path=repo_path)
     problems: RepoAsJson = repo.get_outputs_on_files(with_errors=True, with_outputs=False)
+    task_template = """
+The python code in the repository is incorrect. Your job is to fix them. 
+
+Please remember that all files are inside a repository so all imports must start with from {repo_name}.
+
+You are inside an interation so do not hesite to add some prints for the next iteration
+Here is a list of errors per file:
+"""
+
+    
+    repo_name = repo_name or repo_path.name
+    
+    task = task_template.format(repo_name=repo_name)
 
     if problems:
-        print("❌ Trying and fix the problem")
-        print(problems.convert_to_flat_txt())
-        message = get_prompt_fix_repository(repo_name=repo_path.name)
+        logger.warning("❌ Trying and fix the problem")
+        logger.warning(problems.convert_to_flat_txt())
+        
         message += problems.convert_to_flat_txt()
         call_llm_on_repo(message=message, repo_path=repo_path, litellm_id=litellm_id, repo_name=repo_name, edit_format=edit_format)
     else:
-        print("✅ no Problems found ")
+        logger.info("✅ no Problems found ")
         return None
 
     return problems

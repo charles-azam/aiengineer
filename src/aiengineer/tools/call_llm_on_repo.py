@@ -51,11 +51,21 @@ def call_llm_on_repo_with_folder(message: str, folder_path: Path, repo_path: Pat
 def call_llm_on_repo(message: str, repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> None:
     call_llm_on_repo_with_folder(message=message, folder_path=repo_path, repo_path=repo_path, litellm_id=litellm_id, repo_name=repo_name, edit_format=edit_format)
     
-    
+def get_repo_as_json_output(repo_path: Path, with_errors: bool = False, with_outputs: bool = False) -> RepoAsJson:
+    repo = RepoAsObject.from_directory(repo_path=repo_path)
+    outputs = repo.get_outputs_on_files(with_errors=with_errors, with_outputs=with_outputs)
+    return outputs
+
+def get_python_errors_in_repository(repo_path: Path) -> str:
+    repo_as_json = get_repo_as_json_output(repo_path=repo_path, with_errors=True, with_outputs=True)
+    return repo_as_json.convert_to_flat_txt()
+
+def get_print_outputs_in_repository(repo_path: Path) -> str:
+    repo_as_json = get_repo_as_json_output(repo_path=repo_path, with_errors=False, with_outputs=True)
+    return repo_as_json.convert_to_flat_txt()
+
 
 def fix_repository(repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> RepoAsJson | None:
-    repo = RepoAsObject.from_directory(repo_path=repo_path)
-    problems: RepoAsJson = repo.get_outputs_on_files(with_errors=True, with_outputs=False)
     task_template = """
 The python code in the repository is incorrect. Your job is to fix them. 
 
@@ -69,6 +79,8 @@ Here is a list of errors per file:
     repo_name = repo_name or repo_path.name
     
     message = task_template.format(repo_name=repo_name)
+    
+    problems = get_python_errors_in_repository(repo_path=repo_path)
 
     if problems:
         logger.warning("❌ Trying and fix the problem")
@@ -84,3 +96,10 @@ Here is a list of errors per file:
 
 
 
+
+
+def get_repository_map(repo_path: Path, litellm_id :str, repo_name: str | None = None) -> str:
+    "get repisotory map along with documents"
+    
+def get_python_doc_as_markdown(repo_path: Path, litellm_id :str, repo_name: str | None = None) -> str:
+    pass

@@ -1,4 +1,4 @@
-from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_code
+from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_code, clean_after_test
 import shutil
 from pathlib import Path
 from aider.repo import GitRepo
@@ -27,6 +27,7 @@ Create three files:
     from testing.call_llm_on_repo import a, b, c
     from testing.call_llm_on_repo.c import a, b, c
     assert c == 3
+    clean_after_test()
     
 def test_call_llm_on_repo_with_files():
     testing_dir = TESTING_PATH / "call_llm_on_repo_with_files"
@@ -51,6 +52,7 @@ Create three files in a directory named call_llm_on_repo_with_files:
     from testing.call_llm_on_repo_with_files import a, b, c
     from testing.call_llm_on_repo_with_files.c import a, b, c
     assert c == 3
+    clean_after_test()
 
     
 def test_call_llm_on_repo_with_folder():
@@ -75,10 +77,13 @@ Create three files in a directory named call_llm_on_repo_with_folder:
     from testing.call_llm_on_repo_with_folder import a, b, c
     from testing.call_llm_on_repo_with_folder.c import a, b, c
     assert c == 3
+    clean_after_test()
     
 def test_fix_repository():
     testing_dir = initialise_folder_with_code()
     fix_repository(repo_path=testing_dir, litellm_id=TESTING_MODEL, edit_format="diff")
+    clean_after_test()
+    
     
 def test_get_repo_as_json_output():
     initialise_folder_with_code()
@@ -86,6 +91,7 @@ def test_get_repo_as_json_output():
     repo_as_dict = repo_as_json.to_dict()
     assert "10" in repo_as_dict["fix_repository/values.py"].content
     assert "No module named 'fix_repository'" in repo_as_dict["fix_repository/conversion.py"].content
+    clean_after_test()
     
 def test_get_python_errors_in_repository():
     initialise_folder_with_code()
@@ -112,6 +118,7 @@ ModuleNotFoundError: No module named \'fix_repository\'
     
     assert "10" in message
     assert "No module named 'fix_repository'" in message
+    clean_after_test()
     
 def test_get_print_outputs_in_repository():
     initialise_folder_with_code()
@@ -123,5 +130,6 @@ def test_get_print_outputs_in_repository():
     """.strip()
     assert "10" in message
     assert "No module named 'fix_repository'" not in message
+    clean_after_test()
     
     

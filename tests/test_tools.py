@@ -11,14 +11,7 @@ def get_tool_responses_from_messages(messages: list[Message]) -> list[Message]:
 
 
 def test_get_repository_map_tool():
-    from smolagents import CodeAgent, LiteLLMModel, tool
-
-    from aiengineer.common import AIENGINEER_SRC_DIR
-
-    REACTOR_PATH = AIENGINEER_SRC_DIR / "reactor"
-
-    from aiengineer.tools.call_llm_on_repo import (
-        get_print_outputs_in_repository, get_repository_map)
+    from aiengineer.tools.call_llm_on_repo import get_repository_map
 
     model = LiteLLMModel(TESTING_MODEL)
 
@@ -53,3 +46,49 @@ I want you to base your answer only on the answer of get_repository_map_tool. Do
     assert len(tool_responses) == 2
     assert expected_output in tool_responses[0]["content"][0]["text"]
     clean_after_test()
+
+def test_get_print_outputs_in_repository():
+    from aiengineer.tools.call_llm_on_repo import (
+        get_print_outputs_in_repository)
+
+    model = LiteLLMModel(TESTING_MODEL)
+
+    initialise_folder_with_working_code()
+
+    @tool
+    def get_print_outputs_in_repository_tool() -> str:
+        """
+        This tool collects all print outputs from the Python files in the repository.
+        It runs each file and captures the output of print statements.
+        It is useful for understanding the behavior of the code in the repository.
+
+        Returns:
+            str: A string containing the print outputs from the repository.
+        """
+        return get_print_outputs_in_repository(repo_path=TESTING_PATH)
+
+    expected_output = get_print_outputs_in_repository_tool()
+
+    agent = CodeAgent(
+        tools=[get_print_outputs_in_repository_tool],
+        model=model,
+        max_steps=2,
+    )
+    agent.run(
+        f"""
+I want you to explain to me what the repository does.
+
+I want you to base your answer only on the answer of get_print_outputs_in_repository_tool. Do not try to use python to get more information.
+
+Please call the tool only once, there must be only two steps do not try do to anything else.
+    """
+    )
+    messages = agent.write_memory_to_messages()
+    tool_responses = get_tool_responses_from_messages(messages)
+    assert len(tool_responses) == 2
+    tool_response = tool_responses[0]["content"][0]["text"]
+    assert len(expected_output) < len(tool_response) # in would not work here since the output depends on the order of the files
+    assert len(tool_response) < len(expected_output)*2 # make sure prints are not accounted twice
+    clean_after_test()
+
+

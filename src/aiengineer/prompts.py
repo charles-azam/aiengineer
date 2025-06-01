@@ -1,7 +1,6 @@
 from aiengineer.tools.parse_repository import RepoAsObject
 
-
-_PROMPT_AI_ENGINEER = r'''
+_PROMPT_AI_ENGINEER = r"""
 You are a highly specialized hardware engineering assistant. Your currently in an infinite for loop in which you want to keep improving our design. All of your data will be written in python.
 
 You are working in a repository, every import to the file of this repository must start with `from {repo_name}`.
@@ -58,9 +57,9 @@ Be as specific as you can for each system , I want the technology, the provider,
 
 Bellow, you will find the outputs (print) from the previous iteration and the prompt:
 
-'''
+"""
 
-_PROMPT_AI_ENGINEER_SMOLAGENTS = r'''
+_PROMPT_AI_ENGINEER_SMOLAGENTS = r"""
 
 # Introduction
 
@@ -108,8 +107,7 @@ Bellow, you will find the outputs (print) from the previous iteration (there mig
 
 Bellow, you will find the prompt asked by the manager agent:
 
-'''
-
+"""
 
 
 def get_prompt_ai_engineer(repo_name: str):
@@ -118,8 +116,11 @@ def get_prompt_ai_engineer(repo_name: str):
     example_path = ROOT_PYFORGE_DIR / "src/pyforge/examples/heat_pump"
     repo_as_object = RepoAsObject.from_directory(example_path)
     examples_in_markdown = repo_as_object.to_markdown()
-    
-    return _PROMPT_AI_ENGINEER.replace(r"{repo_name}", repo_name).replace(r"{examples_in_markdown}", examples_in_markdown)
+
+    return _PROMPT_AI_ENGINEER.replace(r"{repo_name}", repo_name).replace(
+        r"{examples_in_markdown}", examples_in_markdown
+    )
+
 
 def get_prompt_ai_engineer_smolagents(repo_name: str):
     from pyforge.common import ROOT_PYFORGE_DIR
@@ -127,5 +128,7 @@ def get_prompt_ai_engineer_smolagents(repo_name: str):
     example_path = ROOT_PYFORGE_DIR / "src/pyforge/examples/heat_pump"
     repo_as_object = RepoAsObject.from_directory(example_path)
     examples_in_markdown = repo_as_object.to_markdown()
-    
-    return _PROMPT_AI_ENGINEER_SMOLAGENTS.replace(r"{repo_name}", repo_name).replace(r"{examples_in_markdown}", examples_in_markdown)
+
+    return _PROMPT_AI_ENGINEER_SMOLAGENTS.replace(r"{repo_name}", repo_name).replace(
+        r"{examples_in_markdown}", examples_in_markdown
+    )

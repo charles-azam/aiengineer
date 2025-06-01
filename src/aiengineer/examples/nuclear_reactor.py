@@ -1,5 +1,5 @@
-from aiengineer.config import EngineeringConfig
 from aiengineer.common import AIENGINEER_SRC_DIR
+from aiengineer.config import EngineeringConfig
 
 PROMPT_REACTOR = """
 Let's build a small modular reactor of around 20 MW to generate electricity.

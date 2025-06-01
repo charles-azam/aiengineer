@@ -193,9 +193,9 @@ The code in the repository `{repo_name}` contains errors. Fix these issues with 
     return problems
 
 
-def get_repository_map(repo_path: Path) -> str:
-    repo = RepoAsObject.from_directory(repo_path=repo_path, with_summary=True)
-    repo_as_json = repo.to_repo_as_json(summary=True)
+def get_repository_map(repo_path: Path, summary: bool = False) -> str:
+    repo = RepoAsObject.from_directory(repo_path=repo_path, with_summary=summary)
+    repo_as_json = repo.to_repo_as_json(summary=summary)
     return repo_as_json.convert_to_flat_txt()
 
 

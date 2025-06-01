@@ -34,11 +34,11 @@ from aiengineer.testing import (
 
 from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools
 
-
+@pytest.mark.no_api
 def test_build_repo_tools_keys():
     build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task="Test task")
 
-
+@pytest.mark.api_needed
 def test_repository_map_tool_via_agent():
     initialise_folder_with_working_code()
     original_task = """
@@ -70,7 +70,7 @@ Do **not** try to run Python or gather extra info.
     clean_after_test()
 
 
-
+@pytest.mark.api_needed
 def test_print_outputs_tool_via_agent():
     initialise_folder_with_working_code()
     original_task = """

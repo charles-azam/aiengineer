@@ -24,7 +24,7 @@ def initialise_empty_folder(folder_path: Path):
     folder_path.mkdir(parents=True, exist_ok=True)
     (folder_path / "__init__.py").touch()
     (folder_path.parent / "__init__.py").touch()
-    
+        
 def clean_after_test(testing_path: Path = TESTING_PATH):
     shutil.rmtree(testing_path, ignore_errors=True)
     testing_path.mkdir(parents=True, exist_ok=True)
@@ -57,8 +57,7 @@ print(masse_kg)
         )
     return testing_dir
 
-def initialise_folder_with_working_code() -> Path:
-    testing_dir = TESTING_PATH / "test_working_code"
+def initialise_folder_with_working_code(testing_dir = TESTING_PATH / "test_working_code") -> Path:
     initialise_empty_folder(testing_dir)
     
     file = testing_dir / "conversion.py"
@@ -66,7 +65,7 @@ def initialise_folder_with_working_code() -> Path:
     '''
 """Conversion module for converting kg to pounds."""
 
-from testing.test_working_code.values import masse_kg
+from testing.{module_name}.values import masse_kg
 
 # Convert kg to pounds
 def kg_to_pounds(kg_value):
@@ -77,7 +76,7 @@ print("DEBUG: conversion.py loaded successfully")
 print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
 print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
     
-    '''
+    '''.replace("{module_name}", testing_dir.name)
         )
     file = testing_dir / "values.py"
     file.write_text(
@@ -89,3 +88,43 @@ print(masse_kg)
     '''
         )
     return testing_dir
+
+def initialise_folder_with_docs() -> Path:
+    testing_dir = TESTING_PATH / "test_docs"
+    initialise_folder_with_working_code(testing_dir)
+    
+    doc_path = testing_dir / "docs.py"
+    doc_path.write_text(
+    '''
+"""Main document for the engineering project."""  
+
+import pandas as pd
+from testing.test_docs.values import masse_kg
+from pyforge.note import (Citation, DocumentConfig, Figure, Reference, Table,
+                          Title, display)
+
+# Document configuration
+config = DocumentConfig(
+    title="Example PyForge Document", author="PyForge User", date="2025-05-16"
+)
+display(config)
+
+# Create a sample dataframe for demonstration
+df = pd.DataFrame(
+    {
+        "Name": ["Alice", "Bob", "Charlie"],
+        "Age": [25, 30, 35],
+        "City": ["New York", "London", "Paris"],
+    }
+)
+
+display(
+   f"""
+# Introduction
+The system mass is {masse_kg} kg.
+""", Table(df, "Sample data table")
+)
+
+''')
+    return doc_path
+    

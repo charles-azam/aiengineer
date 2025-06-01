@@ -1,11 +1,14 @@
 from ast import main
 from operator import add
+from pydoc import doc
+import tempfile
 from aider.coders import Coder
 from aider.models import Model
 from aider.io import InputOutput
 from pathlib import Path
 from aiengineer.tools.parse_repository import RepoAsJson, RepoAsObject
 import logging
+import random
 logger = logging.getLogger(__name__)
 
 def call_llm_on_repo_with_files(message: str, fnames: list[Path], repo_path: Path, litellm_id :str, repo_name: str | None = None, edit_format: str = "diff") -> None:
@@ -119,6 +122,30 @@ def get_repository_map(repo_path: Path) -> str:
     
     
     
-def get_python_doc_as_markdown(repo_path: Path, litellm_id :str, repo_name: str | None = None) -> str:
+def get_python_doc_as_markdown(doc_path: Path | str, repo_path: Path) -> str:
+    from pyforge.cli import markdown
+
     
-    pass
+    if isinstance(doc_path, Path):
+        doc_path_str = str(doc_path.relative_to(repo_path))
+    else:
+        doc_path_str = doc_path
+        doc_path = Path(doc_path)
+        if not doc_path.is_absolute():
+            doc_path = repo_path / doc_path
+    
+    repo_as_object = RepoAsObject.from_directory(repo_path=repo_path)
+    repo_as_json = repo_as_object.to_repo_as_json()
+    repo_as_dict = repo_as_json.to_dict()
+    if doc_path_str not in repo_as_dict:
+        raise ValueError(f"""The document {doc_path_str} is not found in the repository {repo_path}.
+Here is the list of files in the repository:
+{"\n".join(list(repo_as_dict.keys()))}
+                         """)
+    output = doc_path.with_suffix(".md")
+    markdown(doc_path = doc_path, output_path = output)
+    output_text = output.read_text()
+    
+    # TODO: handle images correctly
+    return output_text
+        

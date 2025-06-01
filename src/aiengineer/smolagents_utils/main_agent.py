@@ -21,7 +21,8 @@ def create_smolagents_engineer(config: EngineeringConfig) -> tuple[CodeAgent, st
     iterations = config.iterations
     prompt = config.prompt
 
-    tools = build_repo_tools(repo_path=repo_path, litellm_id=litellm_id)
+    tools = build_repo_tools(repo_path=repo_path, litellm_id=litellm_id, original_task=prompt)
+    tools["exec_all_python_files_tool"]()
     prompt = get_prompt_ai_engineer_smolagents(repo_name=repo_path.name, task=prompt)
 
     return CodeAgent(

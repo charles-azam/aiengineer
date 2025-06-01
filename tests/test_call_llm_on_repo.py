@@ -25,7 +25,7 @@ def test_call_llm_on_repo():
     initialise_empty_folder(testing_dir)
     call_llm_on_repo(
         message="""
-Create three files:
+Create three files in a directory called call_llm_on_repo:
 
 1. **a.py** – declare `a = 1`.  
 2. **b.py** – declare `b = 2`.  
@@ -35,9 +35,8 @@ Create three files:
    • `print(c)` when the file is run as a script.
 
 """,
-        repo_path=testing_dir,
+        repo_path=TESTING_PATH,
         litellm_id=TESTING_MODEL,
-        repo_name="testing.call_llm_on_repo",
     )
     from testing.call_llm_on_repo import a, b, c
     from testing.call_llm_on_repo.c import a, b, c

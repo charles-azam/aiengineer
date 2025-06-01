@@ -4,9 +4,9 @@ from smolagents import tool
 from yaml import DocumentStartEvent
 
 from aiengineer.prompts import get_prompt_ai_engineer_smolagents
-from aiengineer.template.nuclear_reactor import CONFIG_REACTOR, PROMPT_REACTOR
-from aiengineer.tools.llm_edit_repo import (RepoAsObject, call_llm_on_repo,
-                                               fix_repository)
+from aiengineer.examples.nuclear_reactor import CONFIG_REACTOR, PROMPT_REACTOR
+from aiengineer.tools.llm_edit_repo import (RepoAsObject, llm_edit_repo,
+                                               llm_fix_repo)
 from aiengineer.tools.engineer_agent import run_engineer_agent
 
 SYSTEM_PROMPT = get_prompt_ai_engineer_smolagents(
@@ -33,7 +33,7 @@ def ask_coder_modification_on_repo_tool(question: str) -> None:
     """
 
     i = 0
-    while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
+    while llm_fix_repo(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")
 
@@ -46,7 +46,7 @@ def ask_coder_modification_on_repo_tool(question: str) -> None:
     )
 
     i = 0
-    while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
+    while llm_fix_repo(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")
 
@@ -55,7 +55,7 @@ def ask_coder_modification_on_repo_tool(question: str) -> None:
 def ask_coder_fix_the_code_tool() -> None:
     """Asks a question to another agent that will modify the repository according to the instructions in the question."""
 
-    while fix_repository(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
+    while llm_fix_repo(REPO_PATH, litellm_id=LITELLM_ID) and i < 5:
         i += 1
         print(f"--- Attempt number {i} ---")
 

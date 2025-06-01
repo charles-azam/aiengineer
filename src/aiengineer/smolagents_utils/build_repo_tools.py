@@ -110,6 +110,9 @@ def build_repo_tools(
     def call_llm_on_repo_tool(message: str) -> str:
         """
         Run an arbitrary instruction against the entire repo via LLM-powered aider.
+        
+        Args:
+            message: The instruction to run against the repo.
         """
         call_llm_on_repo(
             message=message,
@@ -129,6 +132,10 @@ def build_repo_tools(
     ) -> str:
         """
         Run an arbitrary instruction restricted to a list of files (relative paths) of repo via LLM-powered aider.
+        
+        Args:
+            message: The instruction to run against the repo.
+            fnames: List of relative paths to files in the repo to restrict the LLM call to.
         """
         call_llm_on_repo_with_files(
             message=message,
@@ -149,6 +156,10 @@ def build_repo_tools(
     ) -> str:
         """
         Run an arbitrary instruction restricted to a subfolder of a repo via LLM-powered aider.
+        
+        Args:
+            message: The instruction to run against the repo.
+            folder: The name of the subfolder in the repo to restrict the LLM call to.
         """
         call_llm_on_repo_with_folder(
             message=message,

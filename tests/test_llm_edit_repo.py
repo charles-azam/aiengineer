@@ -227,7 +227,6 @@ print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
     )
     pass
     clean_after_test()
-test_get_repository_map()
 
 def test_get_python_doc_as_markdown():
     doc_path = initialise_folder_with_docs()

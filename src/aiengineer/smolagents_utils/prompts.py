@@ -154,11 +154,6 @@ Begin by calling *get_repository_map_tool(summary=False)*.
 Here is the original task given to your manager:
 {original_task}
 
-# Task
-
-Now here is the task given to you by the manager agent:
-
-{task}
 """
 
 from aiengineer.utils.parse_repository import RepoAsObject
@@ -177,7 +172,7 @@ def get_prompt_ai_engineer_smolagents(repo_name: str, task: str) -> str:
         task=task,
     )
     
-def get_prompt_aider_smolagents(repo_name: str, task: str, original_task: str) -> str:
+def get_prompt_aider_smolagents(repo_name: str, original_task: str) -> str:
     from pyforge.common import ROOT_PYFORGE_DIR
 
     example_path = ROOT_PYFORGE_DIR / "src/pyforge/examples/heat_pump"
@@ -188,6 +183,5 @@ def get_prompt_aider_smolagents(repo_name: str, task: str, original_task: str) -
     return PROMPT_AIDER.format(
         repo_name=repo_name,
         examples_in_markdown=examples_in_markdown,
-        task=task,
         original_task=original_task,
     )

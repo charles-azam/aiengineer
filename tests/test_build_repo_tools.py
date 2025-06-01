@@ -8,7 +8,7 @@ The suite validates that
     `smolagents.CodeAgent`.
 3.  Read-only tools (`get_repository_map`, `get_print_outputs`) behave exactly
     like the underlying helpers you already test elsewhere.
-4.  The write / repair tool (`llm_fix_repo_agent`) really fixes a broken repo
+4.  The write / repair tool (`llm_fix_repo_tool`) really fixes a broken repo
     on disk so subsequent checks pass.
 
 It re-uses the same fixtures/helpers you supplied for other tests.
@@ -161,25 +161,31 @@ llm_edit_files_tool is the only way for you to modify the repository.
     from testing.test_folder.result import twenty_kg_in_pounds
 
     assert abs(twenty_kg_in_pounds - 44.0924524) < 1
-    
-def test_llm_fix_repo_agent_repairs_errors():
+    clean_after_test()
+
+def test_llm_fix_repo_tool_repairs_errors():
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    model = LiteLLMModel(TESTING_MODEL)
 
-    # First call should return a description of the problems it tried to fix
-    problems_txt = tools["llm_fix_repo_agent"]()
-    assert "NameError" in problems_txt or "import" in problems_txt
 
-    # Second call should report that everything is now clean
-    assert tools["llm_fix_repo_agent"]() == "No problems detected."
+    agent = CodeAgent(
+        tools=[tools["llm_fix_repo_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        model=model,
+        max_steps=10,
+    )
+    agent.run(
+        '''
+I want you to understand the problem and give instructions to fix the repository.
+'''
+    )
 
-    # Import a value that used to fail, proving the files on disk are valid
-    from testing.llm_fix_repo.conversion import masse_g  # noqa: E402
+
+    from testing.llm_fix_repo.conversion import masse_g
 
     assert masse_g == 10000
     clean_after_test()
-
 
 
 def test_doc_as_markdown_tool():

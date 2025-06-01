@@ -27,6 +27,7 @@ from aiengineer.testing import (
     initialise_folder_with_non_working_code,
     initialise_folder_with_working_code,
     initialise_folder_with_docs,
+    initialise_empty_folder,
     get_tool_responses_from_messages
 )
 
@@ -55,7 +56,7 @@ def test_repository_map_tool_via_agent():
 
     model = LiteLLMModel(TESTING_MODEL)
 
-    expected_output = tools["get_repository_map_tool"]()
+    expected_output = tools["get_repository_map_tool"](summary=False)
 
     agent = CodeAgent(
         tools=[tools["get_repository_map_tool"]],
@@ -107,13 +108,24 @@ Call the tool **once** – exactly two steps total.
     assert len(expected_raw) < len(tool_output)
     assert len(tool_output) < len(expected_raw) * 2
     clean_after_test()
-    
+
 def test_call_llm_on_repo_tool():
     testing_dir = TESTING_PATH / "call_llm_on_repo"
     initialise_empty_folder(testing_dir)
-    call_llm_on_repo(
-        message="""
-Create three files:
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools["call_llm_on_repo_tool"]],
+        model=model,
+        max_steps=2,
+    )
+    agent.run(
+        '''
+I want you to call the tool call_llm_on_repo_tool with the following message:
+
+"""
+Create three files in a directory called call_llm_on_repo:
 
 1. **a.py** – declare `a = 1`.  
 2. **b.py** – declare `b = 2`.  
@@ -121,12 +133,13 @@ Create three files:
    • `import` `a` and `b` using the `my_repo.` prefix.  
    • declare `c = a + b`.  
    • `print(c)` when the file is run as a script.
+"""
 
-""",
-        repo_path=testing_dir,
-        litellm_id=TESTING_MODEL,
-        repo_name="testing.call_llm_on_repo",
+Call the tool **once** – exactly two steps total.
+'''
     )
+
+
     from testing.call_llm_on_repo import a, b, c
     from testing.call_llm_on_repo.c import a, b, c
 
@@ -136,33 +149,31 @@ Create three files:
 def test_call_llm_on_repo_with_files():
     
     # Here it should give the repository map and ask for modifications using this tool
-    testing_dir = TESTING_PATH / "call_llm_on_repo_with_files"
-    initialise_empty_folder(testing_dir)
-    call_llm_on_repo_with_files(
-        message="""
-Create three files in a directory named call_llm_on_repo_with_files:
-
-1. **a.py** – declare `a = 1`.  
-2. **b.py** – declare `b = 2`.  
-3. **c.py** –  
-   • `import` `a` and `b` using the `my_repo.` prefix.  
-   • declare `c = a + b`.  
-   • `print(c)` when the file is run as a script.
-4. **__init__.py** – create an empty file to make the directory importable.
-
-""",
-        fnames=[testing_dir / "a.py", testing_dir / "b.py", testing_dir / "c.py"],
-        repo_path=TESTING_PATH,
-        litellm_id=TESTING_MODEL,
+    testing_dir = TESTING_PATH / "conversion"
+    initialise_folder_with_working_code(testing_dir)
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools["call_llm_on_repo_with_files_tool"], tools["get_repository_map_tool"]],
+        model=model,
+        max_steps=10,
     )
-    from testing.call_llm_on_repo_with_files import a, b, c
-    from testing.call_llm_on_repo_with_files.c import a, b, c
+    agent.run(
+        '''
+I want you to add a variable called twenty_kg_in_pounds in a new file called result.py next to the conversion.py file that will take as value the result of the conversion of 20 kg to pounds.
+'''
+    )
 
-    assert c == 3
+
+    from testing.conversion import twenty_kg_in_pounds, kg_to_pounds
+
+    assert twenty_kg_in_pounds == kg_to_pounds(20)
     clean_after_test()
-
+    
 
 def test_fix_repository_tool_repairs_errors():
+    # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
 
@@ -182,6 +193,7 @@ def test_fix_repository_tool_repairs_errors():
 
 
 def test_doc_as_markdown_tool():
+    # ask him the summary of a document
     doc_file = initialise_folder_with_docs()
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
 

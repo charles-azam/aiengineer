@@ -21,6 +21,7 @@ def llm_edit_files(
     repo_path: Path,
     litellm_id: str,
     repo_name: str | None = None,
+    system_context: str= "",
     edit_format: str = "diff",
 ) -> None:
     assert repo_path.is_dir()
@@ -43,10 +44,15 @@ def llm_edit_files(
 • Follow PEP 8 unless a rule above overrides it.  
 • After writing the files, do not output anything except the code blocks.
 
+{system_context}
+
 # Task
+
+Now here is the task given to you by the manager agent:
+
 {task}
 """
-    message = template_message.format(my_repo=repo_name or repo_path.name, task=message)
+    message = template_message.format(my_repo=repo_name or repo_path.name, task=message, system_context=system_context)
 
     io = InputOutput(yes=True)
 
@@ -75,6 +81,7 @@ def llm_edit_folder(
     litellm_id: str,
     repo_name: str | None = None,
     edit_format: str = "diff",
+    system_context: str = "",
 ) -> None:
     file_names = list(folder_path.rglob("*.py"))
     if not file_names:
@@ -86,6 +93,7 @@ def llm_edit_folder(
         litellm_id=litellm_id,
         repo_name=repo_name,
         edit_format=edit_format,
+        system_context=system_context,
     )
 
 
@@ -95,6 +103,7 @@ def llm_edit_repo(
     litellm_id: str,
     repo_name: str | None = None,
     edit_format: str = "diff",
+    system_context: str = "",
 ) -> None:
     llm_edit_folder(
         message=message,
@@ -103,6 +112,7 @@ def llm_edit_repo(
         litellm_id=litellm_id,
         repo_name=repo_name,
         edit_format=edit_format,
+        system_context=system_context,
     )
 
 
@@ -120,7 +130,10 @@ def get_python_errors_and_print_outputs_in_repository(repo_path: Path) -> str:
     repo_as_json = get_repo_as_json_output(
         repo_path=repo_path, with_errors=True, with_outputs=True
     )
-    return repo_as_json.convert_to_flat_txt()
+    if repo_as_json:
+        return repo_as_json.convert_to_flat_txt()
+    else:
+        return ""
 
 
 def get_print_outputs_in_repository(repo_path: Path) -> str:
@@ -136,6 +149,7 @@ def llm_fix_repo(
     additional_context_or_instructions: str = "",
     repo_name: str | None = None,
     edit_format: str = "diff",
+    system_context: str = "",
 ) -> RepoAsJson | None:
     task_template = """
 ## Fix Python code in repository:
@@ -185,6 +199,7 @@ The code in the repository `{repo_name}` contains errors. Fix these issues with 
             litellm_id=litellm_id,
             repo_name=repo_name,
             edit_format=edit_format,
+            system_context=system_context,
         )
     else:
         logger.info("✅ no Problems found ")

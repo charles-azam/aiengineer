@@ -39,13 +39,13 @@ def clean_after_test(testing_path: Path = TESTING_PATH):
 
 
 def initialise_folder_with_non_working_code() -> Path:
-    testing_dir = TESTING_PATH / "fix_repository"
+    testing_dir = TESTING_PATH / "llm_fix_repo"
     initialise_empty_folder(testing_dir)
 
     file = testing_dir / "conversion.py"
     file.write_text(
         """
-from fix_repository.values import masse_kg
+from llm_fix_repo.values import masse_kg
 
 def convert_kg_to_g(a: float):
     return a * 100

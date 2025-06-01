@@ -1,9 +1,9 @@
-from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_non_working_code, clean_after_test, initialise_folder_with_working_code
-import shutil
+from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_non_working_code, clean_after_test, initialise_folder_with_working_code, initialise_folder_with_docs
+import pytest
 from pathlib import Path
 from aider.repo import GitRepo
 
-from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files, RepoAsObject, RepoAsJson, get_repo_as_json_output, get_python_errors_in_repository, get_print_outputs_in_repository, get_repository_map
+from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files, RepoAsObject, RepoAsJson, get_repo_as_json_output, get_python_errors_in_repository, get_print_outputs_in_repository, get_repository_map, get_python_doc_as_markdown
 
 def test_call_llm_on_repo():
     testing_dir = TESTING_PATH / "call_llm_on_repo"
@@ -163,3 +163,31 @@ def kg_to_pounds(kg_value):
     pass
     clean_after_test()
 
+def test_get_python_doc_as_markdown():
+    doc_path = initialise_folder_with_docs()
+    with pytest.raises(ValueError):
+        markdown = get_python_doc_as_markdown(doc_path=doc_path/"coucou", repo_path=TESTING_PATH)
+    
+    markdown = get_python_doc_as_markdown(doc_path=doc_path, repo_path=TESTING_PATH)
+    markdown_2 = get_python_doc_as_markdown(doc_path=doc_path, repo_path=TESTING_PATH)
+
+    markdown_str = get_python_doc_as_markdown(doc_path="test_docs/docs.py", repo_path=TESTING_PATH)
+    assert markdown_2 == markdown
+    assert markdown_str == markdown
+    
+    assert markdown.strip() == """
+
+# Introduction
+The system mass is 10 kg.
+
+
+| Name    |   Age | City     |
+|:--------|------:|:---------|
+| Alice   |    25 | New York |
+| Bob     |    30 | London   |
+| Charlie |    35 | Paris    |
+
+Sample data table
+""".strip()
+    pass
+    clean_after_test()

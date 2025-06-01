@@ -8,7 +8,6 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "aider-chat",
     "litellm>=1.68.1",
     "pyforge",
     "smolagents[bedrock,gradio,telemetry,toolkit]>=1.16.0",
@@ -38,6 +37,4 @@ override-dependencies = ["huggingface-hub>=0.31.2"]
 
 [tool.uv.sources]
 pyforge = { path = "../pyforge", editable = true }
-aider-chat = { path = "../aider", editable = true }
-smolagents = { path = "../smolagents", editable = true }
 

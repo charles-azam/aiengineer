@@ -108,6 +108,59 @@ Call the tool **once** – exactly two steps total.
     assert len(tool_output) < len(expected_raw) * 2
     clean_after_test()
     
+def test_call_llm_on_repo_tool():
+    testing_dir = TESTING_PATH / "call_llm_on_repo"
+    initialise_empty_folder(testing_dir)
+    call_llm_on_repo(
+        message="""
+Create three files:
+
+1. **a.py** – declare `a = 1`.  
+2. **b.py** – declare `b = 2`.  
+3. **c.py** –  
+   • `import` `a` and `b` using the `my_repo.` prefix.  
+   • declare `c = a + b`.  
+   • `print(c)` when the file is run as a script.
+
+""",
+        repo_path=testing_dir,
+        litellm_id=TESTING_MODEL,
+        repo_name="testing.call_llm_on_repo",
+    )
+    from testing.call_llm_on_repo import a, b, c
+    from testing.call_llm_on_repo.c import a, b, c
+
+    assert c == 3
+    clean_after_test()
+    
+def test_call_llm_on_repo_with_files():
+    
+    # Here it should give the repository map and ask for modifications using this tool
+    testing_dir = TESTING_PATH / "call_llm_on_repo_with_files"
+    initialise_empty_folder(testing_dir)
+    call_llm_on_repo_with_files(
+        message="""
+Create three files in a directory named call_llm_on_repo_with_files:
+
+1. **a.py** – declare `a = 1`.  
+2. **b.py** – declare `b = 2`.  
+3. **c.py** –  
+   • `import` `a` and `b` using the `my_repo.` prefix.  
+   • declare `c = a + b`.  
+   • `print(c)` when the file is run as a script.
+4. **__init__.py** – create an empty file to make the directory importable.
+
+""",
+        fnames=[testing_dir / "a.py", testing_dir / "b.py", testing_dir / "c.py"],
+        repo_path=TESTING_PATH,
+        litellm_id=TESTING_MODEL,
+    )
+    from testing.call_llm_on_repo_with_files import a, b, c
+    from testing.call_llm_on_repo_with_files.c import a, b, c
+
+    assert c == 3
+    clean_after_test()
+
 
 def test_fix_repository_tool_repairs_errors():
     initialise_folder_with_non_working_code()

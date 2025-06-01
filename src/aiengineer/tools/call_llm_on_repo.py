@@ -112,11 +112,13 @@ The code in the repository `{repo_name}` contains errors. Fix these issues with 
     return problems
 
 
-
-
-
-def get_repository_map(repo_path: Path, litellm_id :str, repo_name: str | None = None) -> str:
-    "get repisotory map along with documents"
+def get_repository_map(repo_path: Path) -> str:
+    repo = RepoAsObject.from_directory(repo_path=repo_path, with_summary=True)
+    repo_as_json = repo.to_repo_as_json(summary=True)
+    return repo_as_json.convert_to_flat_txt()
+    
+    
     
 def get_python_doc_as_markdown(repo_path: Path, litellm_id :str, repo_name: str | None = None) -> str:
+    
     pass

@@ -1,9 +1,9 @@
-from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_non_working_code, clean_after_test
+from aiengineer.testing import TESTING_PATH, TESTING_MODEL, initialise_empty_folder, initialise_folder_with_non_working_code, clean_after_test, initialise_folder_with_working_code
 import shutil
 from pathlib import Path
 from aider.repo import GitRepo
 
-from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files, RepoAsObject, RepoAsJson, get_repo_as_json_output, get_python_errors_in_repository, get_print_outputs_in_repository
+from aiengineer.tools.call_llm_on_repo import call_llm_on_repo, call_llm_on_repo_with_folder, fix_repository, call_llm_on_repo_with_files, RepoAsObject, RepoAsJson, get_repo_as_json_output, get_python_errors_in_repository, get_print_outputs_in_repository, get_repository_map
 
 def test_call_llm_on_repo():
     testing_dir = TESTING_PATH / "call_llm_on_repo"
@@ -136,3 +136,30 @@ def test_get_print_outputs_in_repository():
     clean_after_test()
     
     
+def test_get_repository_map():
+    initialise_folder_with_working_code()
+    repo_map = get_repository_map(repo_path=TESTING_PATH)
+    assert repo_map.strip() == """
+
+**__init__.py**: 
+
+
+**test_working_code/values.py**: 
+Module Description:
+Variables.
+
+Variables:
+masse_kg = 10
+
+**test_working_code/conversion.py**: 
+Module Description:
+Conversion module for converting kg to pounds.
+
+Functions:
+def kg_to_pounds(kg_value):
+
+**test_working_code/__init__.py**: 
+""".strip()
+    pass
+    clean_after_test()
+

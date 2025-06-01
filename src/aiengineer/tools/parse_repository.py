@@ -130,7 +130,7 @@ class RepoAsObject(BaseModel):
 
     @classmethod
     def from_directory(
-        cls, repo_path: Path, include_summary: bool = False
+        cls, repo_path: Path, with_summary: bool = False
     ) -> RepoAsObject:
         repo_files = []
         for file_path in sorted_rglob(repo_path):
@@ -140,7 +140,7 @@ class RepoAsObject(BaseModel):
                 with open(file_path, encoding="utf-8") as f:
                     content = f.read()
             summary = ""
-            if include_summary:
+            if with_summary:
                 summary = _create_summary_python_file(
                     file_path=file_path,
                     include_header=True,

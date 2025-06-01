@@ -36,5 +36,5 @@ build-backend = "hatchling.build"
 override-dependencies = ["huggingface-hub>=0.31.2"]
 
 [tool.uv.sources]
-pyforge = { path = "../pyforge", editable = true }
+pyforge = { path = "./pyforge", editable = true }
 

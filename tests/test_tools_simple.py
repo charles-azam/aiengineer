@@ -1,13 +1,10 @@
-from smolagents import CodeAgent, LiteLLMModel, Message, MessageRole, tool
+from smolagents import CodeAgent, LiteLLMModel, tool
 
 from aiengineer.testing import (TESTING_MODEL, TESTING_PATH, clean_after_test,
-                                initialise_folder_with_working_code)
+                                initialise_folder_with_working_code, get_tool_responses_from_messages)
 
 
-def get_tool_responses_from_messages(messages: list[Message]) -> list[Message]:
-    return [
-        message for message in messages if message["role"] == MessageRole.TOOL_RESPONSE
-    ]
+
 
 
 def test_get_repository_map_tool():

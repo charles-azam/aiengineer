@@ -7,6 +7,8 @@ But I can't help it, I hate fixtures. It is harder to debug And I find it hard t
 import shutil
 from pathlib import Path
 
+from smolagents import Message, MessageRole
+
 from aiengineer.common import AIENGINEER_SRC_DIR
 
 TESTING_PATH = AIENGINEER_SRC_DIR / "testing"
@@ -140,3 +142,9 @@ The system mass is {masse_kg} kg.
 '''
     )
     return doc_path
+
+
+def get_tool_responses_from_messages(messages: list[Message]) -> list[Message]:
+    return [
+        message for message in messages if message["role"] == MessageRole.TOOL_RESPONSE
+    ]

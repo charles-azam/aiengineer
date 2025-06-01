@@ -165,7 +165,7 @@ requires-dist = [
     { name = "litellm", specifier = ">=1.68.1" },
     { name = "markdownify", specifier = ">=1.1.0" },
     { name = "pillow", specifier = ">=11.2.1" },
-    { name = "pyforge", editable = "../pyforge" },
+    { name = "pyforge", editable = "pyforge" },
     { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "rich", specifier = ">=13.7.0" },
     { name = "selenium", specifier = ">=4.32.0" },
@@ -2599,7 +2599,7 @@ wheels = [
 [[package]]
 name = "pyforge"
 version = "0.1.0"
-source = { editable = "../pyforge" }
+source = { editable = "pyforge" }
 dependencies = [
     { name = "coloredlogs" },
     { name = "logging" },

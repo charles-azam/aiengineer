@@ -130,7 +130,7 @@ def get_print_outputs_in_repository(repo_path: Path) -> str:
     return repo_as_json.convert_to_flat_txt()
 
 
-def fix_repository(
+def llm_fix_repo(
     repo_path: Path,
     litellm_id: str,
     additional_context_or_instructions: str = "",

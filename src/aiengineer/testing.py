@@ -63,8 +63,9 @@ def initialise_folder_with_working_code() -> Path:
     
     file = testing_dir / "conversion.py"
     file.write_text(
-    """
-# Conversion module for mass units
+    '''
+"""Conversion module for converting kg to pounds."""
+
 from testing.test_working_code.values import masse_kg
 
 # Convert kg to pounds
@@ -76,13 +77,15 @@ print("DEBUG: conversion.py loaded successfully")
 print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
 print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
     
-    """
+    '''
         )
     file = testing_dir / "values.py"
     file.write_text(
-    """
+    '''
+"""Variables."""
+
 masse_kg = 10
 print(masse_kg)
-    """
+    '''
         )
     return testing_dir

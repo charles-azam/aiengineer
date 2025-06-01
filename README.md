@@ -1,27 +1,30 @@
-# AIEngineer - AI-Assisted Engineering Design Framework
+# AIEngineer – AI-Assisted Engineering Design Framework
 
-[AIEngineer](https://github.com/charles-azam/aiengineer)  is an open-source framework for iterative engineering design using large language models. It enables automated design iteration, simulation, and refinement for complex engineering projects.
+Thank you for taking the time to explore this project!
+
+My core belief is that engineering—especially systems engineering—should be performed through code. If you’re interested in the philosophy behind this approach, you can read my [manifest](https://charles-azam.github.io/documentation/manifest/).
+
+Initially, my goal was to create a fully autonomous engineering agent. Very quickly, however, I realized that building such an agent would require a robust autonomous coding agent beneath it.
+
+After experimenting extensively, I’ve settled on a two-package solution that has proven reliable and extensible:
+
+- **Aider**  
+  Aider excels at applying precise diffs to large repositories based on specific instructions. I tried to roll my own diffing logic, but Aider’s implementation (using diff format) is far more efficient and battle-tested. At first I tried using only aider in a for loop. Both of the approaches are implemented in this package.
+
+- **smolagents**  
+  I needed an agent framework to coordinate Aider. Many agent libraries introduce so much complexity that I end up reading and rewriting their core logic anyway. In contrast, Smolagents is intentionally lightweight. The codebase is small, the documentation is concise, and its abstractions genuinely accelerate development thanks to its focus on “coding agents.”
+
+By combining Smolagents with Aider, I can have an AI-driven process that monitors repository changes, applies diffs, and incrementally builds out an “engineering object” in code. This setup allows the system to iterate, refactor, and expand itself without manual intervention—moving us toward a truly autonomous engineering workflow.
 
 ## Installation
 
 This project is managed using the uv package manager.
 
-For regular users:
+For now, Pyforge is a submodule:
 
 ```bash
-git clone https://github.com/charles-azam/aiengineer
+git clone --recurse-submodules https://github.com/charles-azam/aiengineer
 uv sync
-```
-
-For development mode:
-
-```bash
-cd .. # parent folder to aiengineer
-git clone https://github.com/charles-azam/aiengineer
-git clone https://github.com/charles-azam/pyforge.git
-git clone https://github.com/Aider-AI/aider.git
-git clone https://github.com/huggingface/smolagents.git
-export DEV_MODE=1
 ```
 
 ## Overview
@@ -33,41 +36,56 @@ AIEngineer creates a feedback loop between:
 
 The framework is domain-agnostic and can be applied to various engineering fields including mechanical, electrical, chemical, and more.
 
-## How it works
 
-The most complicated part is to be able to write a repository. To do that, I use aider's functionalities. Aider is not meant to do that so I had to dig inside the code to find the right functions.
+## Examples
 
-The agentic part is homemade for now but I am currently trying to leverage the power of smolagents to improve this part.
+Examples can be found in `src/aiengineer/examples/`
 
-## Features
-
-- Iterative design improvement through AI feedback loops
-- Automatic error detection and correction
-- Structured engineering project representation
-- Customizable for different engineering domains
-- Integration with various LLM providers
-
+I tried two different approaches, one with aider only in a for loop, the other with smolagents + aider.
 
 ## Usage
 
 ### Basic Usage
 
-```python
-from aiengineer.core import EngineeringProject
-from aiengineer.config import EngineeringConfig
+For `AIEngineer` to work, the root folder must be importable, that is why the reactor example is under `src/`.
 
-# Create a configuration
-config = EngineeringConfig(
-    domain="mechanical",
-    model="bedrock/anthropic-claude-3-sonnet",
-    iterations=10
+Then, all it needs is a prompt !
+
+```python
+from aiengineer.config import EngineeringConfig
+from aiengineer.common import AIENGINEER_SRC_DIR
+from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer
+
+prompt_reactor = """
+Design a modular high-temperature gas-cooled reactor (HTGR) system to decarbonizing industrial heat production. The system should:
+
+    Utilize TRISO fuel particles and helium coolant, operating at core temperatures up to 600°C.
+
+    Incorporate passive safety features, including heat removal and containment of fission products within fuel particles.
+
+    Be modular and scalable, suitable for installation at various industrial sites.
+
+    Provide thermal power outputs of 10, 15, or 20 MW, with a lifespan of 20 years and minimal refueling requirements.
+
+    Ensure compatibility with existing industrial heat systems, delivering heat via a secondary CO2 loop to mediums such as steam, hot air, or thermal oil.
+
+Additionally, outline the necessary infrastructure for manufacturing, assembly, and deployment, considering site requirements and regulatory compliance.
+"""
+
+
+CONFIG_REACTOR = EngineeringConfig(
+    litellm_id="bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    iterations=200,
+    repo_path=AIENGINEER_SRC_DIR / "reactor",
+    prompt=prompt_reactor,
 )
 
-# Initialize project
-project = EngineeringProject(config)
 
-# Run the iterative design process
-project.run(prompt="Design a bridge with a 100m span...")
+if __name__ == "__main__":
+    smolagent_engineer, prompt = create_smolagents_engineer(CONFIG_REACTOR)
+
+    smolagent_engineer.run(prompt)
+    
 ```
 
 ### Project Structure
@@ -79,32 +97,9 @@ AIEngineer uses a convention-based file structure for engineering projects:
 - `simulation_*.py` - Computations and physics models
 - `tools_*.py` - Helper functions and utilities
 
-## Extending AIEngineer
+## Testing
 
-### Custom Domains
+The pipeline only checks the tests that do not need an api.
 
-Create domain-specific templates in the `domains/` directory:
-
-```
-domains/
-  mechanical/
-    templates/
-      parameters_template.py
-      systems_template.py
-  electrical/
-    templates/
-      ...
-```
-
-### Custom LLM Providers
-
-Implement the `LLMProvider` interface to add support for different LLM services.
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+To run all the test: `uv run pytest tests`
 

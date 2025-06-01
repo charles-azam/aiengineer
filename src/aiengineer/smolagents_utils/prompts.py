@@ -66,11 +66,17 @@ The output file is the design.py file. You are free and encouraged to write othe
     - A final map of the repo shows a coherent, layered engineering model.
 
 Begin by calling *get_repository_map_tool(summary=False)*.
+
+# Task
+
+Now here is the task given to you by the user:
+
+{task}
 """
 
 from aiengineer.utils.parse_repository import RepoAsObject
 
-def get_prompt_ai_engineer_smolagents(repo_name: str):
+def get_prompt_ai_engineer_smolagents(repo_name: str, task: str) -> str:
     from pyforge.common import ROOT_PYFORGE_DIR
 
     example_path = ROOT_PYFORGE_DIR / "src/pyforge/examples/heat_pump"
@@ -81,4 +87,5 @@ def get_prompt_ai_engineer_smolagents(repo_name: str):
     return PROMPT_SMOLAGENT.format(
         repo_name=repo_name,
         examples_in_markdown=examples_in_markdown,
+        task=task,
     )

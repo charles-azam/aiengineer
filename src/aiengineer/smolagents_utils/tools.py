@@ -5,7 +5,7 @@ from yaml import DocumentStartEvent
 
 from aiengineer.prompts import get_prompt_ai_engineer_smolagents
 from aiengineer.template.nuclear_reactor import CONFIG_REACTOR, PROMPT_REACTOR
-from aiengineer.tools.call_llm_on_repo import (RepoAsObject, call_llm_on_repo,
+from aiengineer.tools.llm_edit_repo import (RepoAsObject, call_llm_on_repo,
                                                fix_repository)
 from aiengineer.tools.engineer_agent import run_engineer_agent
 

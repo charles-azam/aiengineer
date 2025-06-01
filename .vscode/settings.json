@@ -1,9 +1,4 @@
 {
-    "python.analysis.extraPaths": [
-        "../aider",
-        "../smolagents",
-        "../pyforge"
-    ],
     "python.testing.pytestArgs": [
         "tests"
     ],

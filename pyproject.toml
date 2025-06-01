@@ -22,6 +22,8 @@ dependencies = [
     "typer[all]>=0.9.0",
     "rich>=13.7.0",
     "pyyaml>=6.0.1",
+    "black>=25.1.0",
+    "isort>=6.0.1",
 ]
 
 [project.scripts]

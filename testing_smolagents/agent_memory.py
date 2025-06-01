@@ -1,6 +1,6 @@
 from smolagents import CodeAgent, LiteLLMModel
 
-model = LiteLLMModel("openai/gpt-4o") 
+model = LiteLLMModel("openai/gpt-4o")
 
 agent = CodeAgent(tools=[], model=model, verbosity_level=0)
 
@@ -21,6 +21,8 @@ for step in agent.memory.steps:
         if step.error is not None:
             print(f"\nStep {step.step_number} got this error:\n{step.error}\n")
         else:
-            print(f"\nStep {step.step_number} got these observations:\n{step.observations}\n")
-            
+            print(
+                f"\nStep {step.step_number} got these observations:\n{step.observations}\n"
+            )
+
 pass

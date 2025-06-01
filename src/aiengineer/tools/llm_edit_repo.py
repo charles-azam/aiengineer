@@ -116,7 +116,7 @@ def get_repo_as_json_output(
     return outputs
 
 
-def get_python_errors_in_repository(repo_path: Path) -> str:
+def get_python_errors_and_print_outputs_in_repository(repo_path: Path) -> str:
     repo_as_json = get_repo_as_json_output(
         repo_path=repo_path, with_errors=True, with_outputs=True
     )
@@ -167,7 +167,7 @@ The code in the repository `{repo_name}` contains errors. Fix these issues with 
     )
 
     if problems:
-        output_message = get_python_errors_in_repository(repo_path=repo_path)
+        output_message = get_python_errors_and_print_outputs_in_repository(repo_path=repo_path)
         logger.warning("❌ Trying and fix the problem")
         logger.warning(output_message)
 

@@ -15,7 +15,7 @@ from aiengineer.tools.llm_edit_repo import (RepoAsJson, RepoAsObject,
                                                llm_fix_repo,
                                                get_print_outputs_in_repository,
                                                get_python_doc_as_markdown,
-                                               get_python_errors_in_repository,
+                                               get_python_errors_and_print_outputs_in_repository,
                                                get_repo_as_json_output,
                                                get_repository_map)
 
@@ -129,7 +129,7 @@ def test_get_repo_as_json_output():
 
 def test_get_python_errors_in_repository():
     initialise_folder_with_non_working_code()
-    message = get_python_errors_in_repository(repo_path=TESTING_PATH)
+    message = get_python_errors_and_print_outputs_in_repository(repo_path=TESTING_PATH)
     assert (
         """**llm_fix_repo/values.py**: 
 10"""

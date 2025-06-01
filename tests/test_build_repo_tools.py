@@ -171,7 +171,6 @@ I want you to add a variable called twenty_kg_in_pounds in a new file called res
     assert twenty_kg_in_pounds == kg_to_pounds(20)
     clean_after_test()
     
-
 def test_llm_fix_repo_agent_repairs_errors():
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()

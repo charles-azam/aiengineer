@@ -46,7 +46,7 @@ def build_repo_tools(
         Args:
             summary: If True, return a summary of each file instead of the full content.
         """
-        return get_repository_map(repo_path=repo_path)
+        return get_repository_map(repo_path=repo_path, summary=summary)
 
     tools["get_repository_map_tool"] = get_repository_map_tool
 

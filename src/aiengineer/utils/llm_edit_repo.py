@@ -120,7 +120,10 @@ def get_python_errors_and_print_outputs_in_repository(repo_path: Path) -> str:
     repo_as_json = get_repo_as_json_output(
         repo_path=repo_path, with_errors=True, with_outputs=True
     )
-    return repo_as_json.convert_to_flat_txt()
+    if repo_as_json:
+        return repo_as_json.convert_to_flat_txt()
+    else:
+        return ""
 
 
 def get_print_outputs_in_repository(repo_path: Path) -> str:

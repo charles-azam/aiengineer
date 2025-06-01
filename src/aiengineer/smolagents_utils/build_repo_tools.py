@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Callable
 from smolagents import tool
 
-from aiengineer.tools.call_llm_on_repo import (
+from aiengineer.tools.llm_edit_repo import (
     call_llm_on_repo,
     call_llm_on_repo_with_files,
     call_llm_on_repo_with_folder,

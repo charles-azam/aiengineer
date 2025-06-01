@@ -167,12 +167,8 @@ def test_get_repository_map_summary():
 **__init__.py**: 
 
 
-**test_working_code/values.py**: 
-Module Description:
-Variables.
+**test_working_code/__init__.py**: 
 
-Variables:
-masse_kg = 10
 
 **test_working_code/conversion.py**: 
 Module Description:
@@ -181,7 +177,12 @@ Conversion module for converting kg to pounds.
 Functions:
 def kg_to_pounds(kg_value):
 
-**test_working_code/__init__.py**: 
+**test_working_code/values.py**: 
+Module Description:
+Variables.
+
+Variables:
+masse_kg = 10
 """.strip()
     )
     pass
@@ -198,13 +199,8 @@ def test_get_repository_map():
 **__init__.py**: 
 
 
-**test_working_code/values.py**: 
+**test_working_code/__init__.py**: 
 
-"""Variables."""
-
-masse_kg = 10
-print(masse_kg)
-    
 
 **test_working_code/conversion.py**: 
 
@@ -220,10 +216,13 @@ def kg_to_pounds(kg_value):
 print("DEBUG: conversion.py loaded successfully")
 print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
 print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
-    
-    
 
-**test_working_code/__init__.py**: 
+**test_working_code/values.py**: 
+
+"""Variables."""
+
+masse_kg = 10
+print(masse_kg)
 '''.strip()
     )
     pass

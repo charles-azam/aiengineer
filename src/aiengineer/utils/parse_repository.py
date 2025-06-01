@@ -14,8 +14,7 @@ from pydantic import BaseModel, Field
 
 
 def sorted_rglob(input: Path, pattern: str = "*.py") -> list[Path]:
-    return list(input.rglob(pattern=pattern))
-
+    return sorted(input.rglob(pattern), key=lambda p: str(p))
 
 class FileAsJson(BaseModel):
     """

@@ -85,9 +85,7 @@ def kg_to_pounds(kg_value):
 # Debug statement
 print("DEBUG: conversion.py loaded successfully")
 print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
-print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
-    
-    '''.replace(
+print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")'''.replace(
             "{module_name}", testing_dir.name
         )
     )

@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  uv-example:
+  pytest:
     name: python
     runs-on: ubuntu-latest
 
@@ -27,7 +27,4 @@ jobs:
 
       - name: Run tests
         # For example, using `pytest`
-        run: uv run pytest tests
-
-      - name: Run cli
-        run: uv run pyforge --help
+        run: uv run pytest tests -m no_api

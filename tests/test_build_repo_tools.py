@@ -36,7 +36,7 @@ from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools
 
 
 def test_build_repo_tools_keys():
-    build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task="Test task")
 
 
 def test_repository_map_tool_via_agent():

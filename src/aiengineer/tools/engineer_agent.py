@@ -1,8 +1,8 @@
 import logging
 from pathlib import Path
 
-from aiengineer.tools.llm_edit_repo import (RepoAsObject, call_llm_on_repo,
-                                               fix_repository)
+from aiengineer.tools.llm_edit_repo import (RepoAsObject, llm_edit_repo,
+                                               llm_fix_repo)
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,7 @@ def run_engineer_agent(
     repo_path: Path, question: str, system_prompt: str, litellm_id: str
 ):
     question = system_prompt + question
-    call_llm_on_repo(message=question, repo_path=repo_path, litellm_id=litellm_id)
+    llm_edit_repo(message=question, repo_path=repo_path, litellm_id=litellm_id)
 
 
 def iterative_engineering_process(
@@ -25,7 +25,7 @@ def iterative_engineering_process(
     for iteration in range(iterations):
         logger.info(f"--- Running iteration number {iteration} ---")
         i = 0
-        while fix_repository(repo_path, litellm_id=litellm_id) and i < trials:
+        while llm_fix_repo(repo_path, litellm_id=litellm_id) and i < trials:
             i += 1
             logger.warning(f"--- Attempt fix number {i} ---")
 

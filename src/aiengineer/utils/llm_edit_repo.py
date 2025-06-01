@@ -10,7 +10,7 @@ from aider.coders import Coder
 from aider.io import InputOutput
 from aider.models import Model
 
-from aiengineer.tools.parse_repository import RepoAsJson, RepoAsObject
+from aiengineer.utils.parse_repository import RepoAsJson, RepoAsObject
 
 logger = logging.getLogger(__name__)
 

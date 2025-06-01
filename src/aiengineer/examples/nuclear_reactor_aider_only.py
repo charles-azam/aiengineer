@@ -1,5 +1,9 @@
-from aiengineer.core import EngineeringProject
-from aiengineer.prompts import get_prompt_ai_engineer
+"""
+Example of using a simple for loop along with aider to build a nuclear reactor design project.
+"""
+
+from aiengineer.aider_utils.core import EngineeringProject
+from aiengineer.aider_utils.prompts import get_prompt_ai_engineer
 from aiengineer.common import AIENGINEER_SRC_DIR
 from aiengineer.config import EngineeringConfig
 

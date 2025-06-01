@@ -40,8 +40,12 @@ def build_repo_tools(
     # ---------------------------------------------------------------------
 
     @tool
-    def get_repository_map_tool() -> str:
-        """Return a high-level map (files + short summaries) of the repository."""
+    def get_repository_map_tool(summary: bool = False) -> str:
+        """Return a high-level map (files + short summaries) of the repository.
+        
+        Args:
+            summary: If True, return a summary of each file instead of the full content.
+        """
         return get_repository_map(repo_path=repo_path)
 
     tools["get_repository_map_tool"] = get_repository_map_tool

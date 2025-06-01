@@ -158,9 +158,9 @@ def test_get_print_outputs_in_repository():
     clean_after_test()
 
 
-def test_get_repository_map():
+def test_get_repository_map_summary():
     initialise_folder_with_working_code()
-    repo_map = get_repository_map(repo_path=TESTING_PATH)
+    repo_map = get_repository_map(repo_path=TESTING_PATH, summary=True)
     assert (
         repo_map.strip()
         == """
@@ -188,6 +188,47 @@ def kg_to_pounds(kg_value):
     pass
     clean_after_test()
 
+def test_get_repository_map():
+    initialise_folder_with_working_code()
+    repo_map = get_repository_map(repo_path=TESTING_PATH, summary=False)
+    assert (
+        repo_map.strip()
+        == '''
+
+**__init__.py**: 
+
+
+**test_working_code/values.py**: 
+
+"""Variables."""
+
+masse_kg = 10
+print(masse_kg)
+    
+
+**test_working_code/conversion.py**: 
+
+"""Conversion module for converting kg to pounds."""
+
+from testing.test_working_code.values import masse_kg
+
+# Convert kg to pounds
+def kg_to_pounds(kg_value):
+    return kg_value * 2.20462
+
+# Debug statement
+print("DEBUG: conversion.py loaded successfully")
+print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
+print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
+    
+    
+
+**test_working_code/__init__.py**: 
+'''.strip()
+    )
+    pass
+    clean_after_test()
+test_get_repository_map()
 
 def test_get_python_doc_as_markdown():
     doc_path = initialise_folder_with_docs()

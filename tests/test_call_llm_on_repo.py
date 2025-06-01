@@ -131,8 +131,11 @@ def test_get_repo_as_json_output():
 def test_get_python_errors_in_repository():
     initialise_folder_with_non_working_code()
     message = get_python_errors_in_repository(repo_path=TESTING_PATH)
-    assert """**fix_repository/values.py**: 
-10""" in message
+    assert (
+        """**fix_repository/values.py**: 
+10"""
+        in message
+    )
     assert "**fix_repository/conversion.py**: " in message
     assert "spec.loader.exec_module(module)" in message
     assert "No module named 'fix_repository'" in message

@@ -1,3 +1,5 @@
+from aiengineer.core import EngineeringProject
+from aiengineer.prompts import get_prompt_ai_engineer
 from aiengineer.common import AIENGINEER_SRC_DIR
 from aiengineer.config import EngineeringConfig
 
@@ -14,3 +16,12 @@ CONFIG_REACTOR = EngineeringConfig(
     repo_path=AIENGINEER_SRC_DIR / "reactor",
     prompt=PROMPT_REACTOR,
 )
+
+
+project = EngineeringProject(
+    config=CONFIG_REACTOR,
+    system_prompt=get_prompt_ai_engineer(repo_name=CONFIG_REACTOR.repo_path.name),
+)
+
+if __name__ == "__main__":
+    project.run()

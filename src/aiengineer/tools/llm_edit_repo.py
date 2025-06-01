@@ -15,7 +15,7 @@ from aiengineer.tools.parse_repository import RepoAsJson, RepoAsObject
 logger = logging.getLogger(__name__)
 
 
-def call_llm_on_repo_with_files(
+def llm_edit_files(
     message: str,
     fnames: list[Path],
     repo_path: Path,
@@ -68,7 +68,7 @@ def call_llm_on_repo_with_files(
     coder.run_one(user_message=message, preproc=False)
 
 
-def call_llm_on_repo_with_folder(
+def llm_edit_folder(
     message: str,
     folder_path: Path,
     repo_path: Path,
@@ -79,7 +79,7 @@ def call_llm_on_repo_with_folder(
     file_names = list(folder_path.rglob("*.py"))
     if not file_names:
         raise ValueError(f"No Python files found in the repository at {folder_path}.")
-    call_llm_on_repo_with_files(
+    llm_edit_files(
         message=message,
         fnames=file_names,
         repo_path=repo_path,
@@ -89,14 +89,14 @@ def call_llm_on_repo_with_folder(
     )
 
 
-def call_llm_on_repo(
+def llm_edit_repo(
     message: str,
     repo_path: Path,
     litellm_id: str,
     repo_name: str | None = None,
     edit_format: str = "diff",
 ) -> None:
-    call_llm_on_repo_with_folder(
+    llm_edit_folder(
         message=message,
         folder_path=repo_path,
         repo_path=repo_path,
@@ -179,7 +179,7 @@ The code in the repository `{repo_name}` contains errors. Fix these issues with 
                 additional_context_or_instructions=additional_context_or_instructions
             )
             message += "\n" + additional_context_or_instructions_message
-        call_llm_on_repo(
+        llm_edit_repo(
             message=message,
             repo_path=repo_path,
             litellm_id=litellm_id,

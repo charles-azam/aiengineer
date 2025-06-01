@@ -1,6 +1,6 @@
-from smolagents import LiteLLMModel, CodeAgent, ActionStep, TaskStep
+from smolagents import ActionStep, CodeAgent, LiteLLMModel, TaskStep
 
-model = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0") 
+model = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0")
 
 
 agent = CodeAgent(tools=[], model=model, verbosity_level=1)

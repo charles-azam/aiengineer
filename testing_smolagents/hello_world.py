@@ -1,6 +1,6 @@
-from smolagents import CodeAgent, AmazonBedrockServerModel, LiteLLMModel
+from smolagents import AmazonBedrockServerModel, CodeAgent, LiteLLMModel
 
-model_id = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0") 
+model_id = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0")
 
 # you can also specify a particular provider e.g. provider="together" or provider="sambanova"
 agent = CodeAgent(tools=[], model=model_id, add_base_tools=True)

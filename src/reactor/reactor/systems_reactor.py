@@ -1,8 +1,11 @@
 """
 System definitions for the Small Modular Reactor (SMR).
 """
-from pyforge import System, Requirement
+
+from pyforge import Requirement, System
+
 from .parameters_reactor import REACTOR_PARAMS
+
 print("Loaded systems_reactor module")
 
 # Root "SMR" system
@@ -19,30 +22,30 @@ smr_system = System(
             description=(
                 f"Deliver {REACTOR_PARAMS.electrical_power} electrical power "
                 f"with {REACTOR_PARAMS.availability_factor*100:.1f}% availability."
-            )
+            ),
         ),
         Requirement(
             name="Safety",
             description=(
                 "Meet all regulatory requirements for nuclear safety with passive "
                 "safety systems capable of maintaining safe shutdown without external power."
-            )
+            ),
         ),
         Requirement(
             name="Operational Lifetime",
             description=(
                 f"Minimum operational lifetime of {REACTOR_PARAMS.design_life} years "
                 f"with refueling every {REACTOR_PARAMS.refueling_interval} months."
-            )
+            ),
         ),
         Requirement(
             name="Manufacturability",
             description=(
                 "Design must be modular for factory fabrication and transportable "
                 "by standard shipping methods to reduce on-site construction time."
-            )
-        )
-    ]
+            ),
+        ),
+    ],
 )
 
 # Reactor Core subsystem
@@ -58,7 +61,7 @@ reactor_core = System(
             description=(
                 f"Generate {REACTOR_PARAMS.thermal_power} thermal power under "
                 f"normal operating conditions."
-            )
+            ),
         ),
         Requirement(
             name="Core Geometry",
@@ -66,7 +69,7 @@ reactor_core = System(
                 f"Core dimensions: {REACTOR_PARAMS.core_height} height, "
                 f"{REACTOR_PARAMS.core_diameter} diameter with "
                 f"{REACTOR_PARAMS.fuel_assemblies} fuel assemblies."
-            )
+            ),
         ),
         Requirement(
             name="Fuel Specification",
@@ -74,10 +77,10 @@ reactor_core = System(
                 f"{REACTOR_PARAMS.fuel_type} fuel with {REACTOR_PARAMS.enrichment}% "
                 f"U-235 enrichment, designed for {REACTOR_PARAMS.refueling_interval} "
                 f"month cycle length."
-            )
-        )
+            ),
+        ),
     ],
-    parent=smr_system
+    parent=smr_system,
 )
 
 # Primary Loop subsystem
@@ -94,24 +97,24 @@ primary_loop = System(
             description=(
                 f"Transfer {REACTOR_PARAMS.thermal_power} from the reactor core "
                 f"to the steam generators."
-            )
+            ),
         ),
         Requirement(
             name="Operating Conditions",
             description=(
                 f"Maintain pressure of {REACTOR_PARAMS.primary_pressure} and flow rate "
                 f"of {REACTOR_PARAMS.primary_flow_rate}."
-            )
+            ),
         ),
         Requirement(
             name="Safety Systems",
             description=(
                 "Include passive safety systems for decay heat removal and "
                 "emergency core cooling without external power."
-            )
-        )
+            ),
+        ),
     ],
-    parent=smr_system
+    parent=smr_system,
 )
 
 # Secondary Loop subsystem
@@ -127,7 +130,7 @@ secondary_loop = System(
             description=(
                 f"Convert thermal energy to {REACTOR_PARAMS.electrical_power} "
                 f"electrical output."
-            )
+            ),
         ),
         Requirement(
             name="Steam Conditions",
@@ -135,17 +138,17 @@ secondary_loop = System(
                 f"Operate with steam at {REACTOR_PARAMS.secondary_pressure} and "
                 f"temperatures from {REACTOR_PARAMS.secondary_temp_inlet} to "
                 f"{REACTOR_PARAMS.secondary_temp_outlet}."
-            )
+            ),
         ),
         Requirement(
             name="Efficiency",
             description=(
                 f"Achieve minimum {REACTOR_PARAMS.thermal_efficiency*100:.1f}% "
                 f"thermal-to-electrical conversion efficiency."
-            )
-        )
+            ),
+        ),
     ],
-    parent=smr_system
+    parent=smr_system,
 )
 
 # Containment subsystem
@@ -161,21 +164,21 @@ containment = System(
             description=(
                 "Provide protection against internal pressurization events and "
                 "external hazards including aircraft impact and natural disasters."
-            )
+            ),
         ),
         Requirement(
             name="Dimensions",
             description=(
                 f"Maximum dimensions: {REACTOR_PARAMS.containment_height} height, "
                 f"{REACTOR_PARAMS.containment_diameter} diameter for transportability."
-            )
+            ),
         ),
         Requirement(
             name="Modular Construction",
             description=(
                 "Design for factory fabrication with minimal on-site assembly."
-            )
-        )
+            ),
+        ),
     ],
-    parent=smr_system
+    parent=smr_system,
 )

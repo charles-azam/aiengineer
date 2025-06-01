@@ -1,4 +1,5 @@
 import re
+
 import requests
 from markdownify import markdownify
 from requests.exceptions import RequestException
@@ -32,17 +33,13 @@ def visit_webpage(url: str) -> str:
         return f"Error fetching the webpage: {str(e)}"
     except Exception as e:
         return f"An unexpected error occurred: {str(e)}"
-    
-print(visit_webpage("https://en.wikipedia.org/wiki/Hugging_Face")[:500])
-from smolagents import (
-    CodeAgent,
-    ToolCallingAgent,
-    InferenceClientModel,
-    WebSearchTool,
-    LiteLLMModel,
-)
 
-model = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0") 
+
+print(visit_webpage("https://en.wikipedia.org/wiki/Hugging_Face")[:500])
+from smolagents import (CodeAgent, InferenceClientModel, LiteLLMModel,
+                        ToolCallingAgent, WebSearchTool)
+
+model = LiteLLMModel("bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0")
 
 web_agent = ToolCallingAgent(
     tools=[WebSearchTool(), visit_webpage],
@@ -57,4 +54,6 @@ manager_agent = CodeAgent(
     managed_agents=[web_agent],
     additional_authorized_imports=["time", "numpy", "pandas"],
 )
-answer = manager_agent.run("If LLM training continues to scale up at the current rhythm until 2030, what would be the electric power in GW required to power the biggest training runs by 2030? What would that correspond to, compared to some countries? Please provide a source for any numbers used.")
+answer = manager_agent.run(
+    "If LLM training continues to scale up at the current rhythm until 2030, what would be the electric power in GW required to power the biggest training runs by 2030? What would that correspond to, compared to some countries? Please provide a source for any numbers used."
+)

@@ -1,17 +1,16 @@
 from __future__ import annotations
-from dataclasses import dataclass, asdict
-from pathlib import Path
+
+import ast
+import importlib.util
+import io
 import json
 import os
-from pydantic import BaseModel, Field
-import ast
-from pydantic import BaseModel
-from pathlib import Path
-import importlib.util
-import traceback
-import io
 import sys
-import json
+import traceback
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+from pydantic import BaseModel, Field
 
 
 def sorted_rglob(input: Path, pattern: str = "*.py") -> list[Path]:
@@ -20,32 +19,32 @@ def sorted_rglob(input: Path, pattern: str = "*.py") -> list[Path]:
 
 class FileAsJson(BaseModel):
     """
-This is the representation of a file in the class, it contains both the name of the file and its content
+    This is the representation of a file in the class, it contains both the name of the file and its content
     """
-    name: str = Field(description="The name of the file")
-    content: str | None  = Field(description="The content of the file, null means the file must be removed")
-    
 
+    name: str = Field(description="The name of the file")
+    content: str | None = Field(
+        description="The content of the file, null means the file must be removed"
+    )
 
 
 class RepoAsJson(BaseModel):
     """
-This class is supposed to represent a repo structure. 
-The json equivalent of this class looks like this
-{
-  "files": [
+    This class is supposed to represent a repo structure.
+    The json equivalent of this class looks like this
     {
-      "name": "<filename.py>",
-      "content": "<the revised file content>"
-    },
-    ...
-  ]
-}
-You must answer with only the modified files, where "name" is the file name and "content" is the updated content. If no modifications are needed, return an empty object.
+      "files": [
+        {
+          "name": "<filename.py>",
+          "content": "<the revised file content>"
+        },
+        ...
+      ]
+    }
+    You must answer with only the modified files, where "name" is the file name and "content" is the updated content. If no modifications are needed, return an empty object.
     """
-    
-    files: list[FileAsJson] = Field(description="List of files in the repo")
 
+    files: list[FileAsJson] = Field(description="List of files in the repo")
 
     def to_dict(self) -> dict[str, FileAsJson]:
         output = {}
@@ -57,13 +56,14 @@ You must answer with only the modified files, where "name" is the file name and 
             else:
                 output[file.name] = file
         return output
-    
+
     def convert_to_flat_txt(self) -> str:
         message = ""
         for file in self.files:
             message += f"\n\n**{file.name}**: \n"
             message += file.content
         return message
+
 
 class FileAsObject(BaseModel):
     """
@@ -171,12 +171,14 @@ class RepoAsObject(BaseModel):
     def to_markdown(self) -> str:
         outputs = []
         for file in self.files:
-            outputs.append(f"""
+            outputs.append(
+                f"""
 **{file.file_path_str}**:
 ```python
 {file.file_content}
 ```
-""")
+"""
+            )
         return "\n".join(outputs)
 
     def to_repo_as_json(self, summary: bool = False) -> RepoAsJson:

@@ -1,6 +1,6 @@
-from smolagents import CodeAgent, AmazonBedrockServerModel, LiteLLMModel
+from smolagents import AmazonBedrockServerModel, CodeAgent, LiteLLMModel
 
-model_id = LiteLLMModel("openai/gpt-4o") 
+model_id = LiteLLMModel("openai/gpt-4o")
 
 # you can also specify a particular provider e.g. provider="together" or provider="sambanova"
 agent = CodeAgent(tools=[], model=model_id, add_base_tools=True)

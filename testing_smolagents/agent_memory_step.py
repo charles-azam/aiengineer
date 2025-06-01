@@ -1,6 +1,6 @@
-from smolagents import LiteLLMModel, CodeAgent, ActionStep, TaskStep
+from smolagents import ActionStep, CodeAgent, LiteLLMModel, TaskStep
 
-model = LiteLLMModel("openai/gpt-4o") 
+model = LiteLLMModel("openai/gpt-4o")
 
 
 agent = CodeAgent(tools=[], model=model, verbosity_level=1)

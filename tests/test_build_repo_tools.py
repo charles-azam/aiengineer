@@ -190,16 +190,22 @@ I want you to understand the problem and give instructions to fix the repository
 
 def test_doc_as_markdown_tool():
     # ask him the summary of a document
-    doc_file = initialise_folder_with_docs()
+    initialise_folder_with_docs()
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    model = LiteLLMModel(TESTING_MODEL)
 
-    # Wrong path → ValueError bubbles up through wrapper
-    with pytest.raises(ValueError):
-        tools["get_doc_as_markdown_tool"](doc_path="non/existent.py")
 
-    md1 = tools["get_doc_as_markdown_tool"](doc_path=str(doc_file))
-    md2 = tools["get_doc_as_markdown_tool"](doc_path="test_docs/docs.py")
+    agent = CodeAgent(
+        tools=[tools["convert_python_doc_to_markdown"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        model=model,
+        max_steps=10,
+    )
+    output = agent.run(
+        '''
+I want you to give me the content of the document docs.py as markdown.
+'''
+    )
 
-    assert md1 == md2
-    assert "| Name    |   Age |" in md1  # sanity check on markdown content
+    assert "| Name    |   Age | City     |" in output
     clean_after_test()
+

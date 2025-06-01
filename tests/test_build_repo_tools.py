@@ -8,7 +8,7 @@ The suite validates that
     `smolagents.CodeAgent`.
 3.  Read-only tools (`get_repository_map`, `get_print_outputs`) behave exactly
     like the underlying helpers you already test elsewhere.
-4.  The write / repair tool (`fix_repository_tool`) really fixes a broken repo
+4.  The write / repair tool (`llm_fix_repo_agent`) really fixes a broken repo
     on disk so subsequent checks pass.
 
 It re-uses the same fixtures/helpers you supplied for other tests.
@@ -43,10 +43,10 @@ def test_build_repo_tools_keys():
         "get_python_errors_tool",
         "get_print_outputs_tool",
         "get_doc_as_markdown_tool",
-        "fix_repository_tool",
-        "call_llm_on_repo_tool",
-        "call_llm_on_repo_with_files_tool",
-        "call_llm_on_repo_with_folder_tool",
+        "llm_fix_repo_agent",
+        "llm_edit_repo_agent",
+        "llm_edit_files_agent",
+        "llm_edit_folder_agent",
     }
     assert expected_keys.issubset(tools.keys())
 
@@ -109,23 +109,23 @@ Call the tool **once** – exactly two steps total.
     assert len(tool_output) < len(expected_raw) * 2
     clean_after_test()
 
-def test_call_llm_on_repo_tool():
-    testing_dir = TESTING_PATH / "call_llm_on_repo"
+def test_llm_edit_repo_agent():
+    testing_dir = TESTING_PATH / "llm_edit_repo"
     initialise_empty_folder(testing_dir)
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["call_llm_on_repo_tool"]],
+        tools=[tools["llm_edit_repo_agent"]],
         model=model,
         max_steps=2,
     )
     agent.run(
         '''
-I want you to call the tool call_llm_on_repo_tool with the following message:
+I want you to call the tool llm_edit_repo_agent with the following message:
 
 """
-Create three files in a directory called call_llm_on_repo:
+Create three files in a directory called llm_edit_repo:
 
 1. **a.py** – declare `a = 1`.  
 2. **b.py** – declare `b = 2`.  
@@ -140,8 +140,8 @@ Call the tool **once** – exactly two steps total.
     )
 
 
-    from testing.call_llm_on_repo import a, b, c
-    from testing.call_llm_on_repo.c import a, b, c
+    from testing.llm_edit_repo import a, b, c
+    from testing.llm_edit_repo.c import a, b, c
 
     assert c == 3
     clean_after_test()
@@ -155,7 +155,7 @@ def test_call_llm_on_repo_with_files():
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["call_llm_on_repo_with_files_tool"], tools["get_repository_map_tool"]],
+        tools=[tools["llm_edit_files_agent"], tools["get_repository_map_tool"]],
         model=model,
         max_steps=10,
     )
@@ -172,20 +172,20 @@ I want you to add a variable called twenty_kg_in_pounds in a new file called res
     clean_after_test()
     
 
-def test_fix_repository_tool_repairs_errors():
+def test_llm_fix_repo_agent_repairs_errors():
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
 
     # First call should return a description of the problems it tried to fix
-    problems_txt = tools["fix_repository_tool"]()
+    problems_txt = tools["llm_fix_repo_agent"]()
     assert "NameError" in problems_txt or "import" in problems_txt
 
     # Second call should report that everything is now clean
-    assert tools["fix_repository_tool"]() == "No problems detected."
+    assert tools["llm_fix_repo_agent"]() == "No problems detected."
 
     # Import a value that used to fail, proving the files on disk are valid
-    from testing.fix_repository.conversion import masse_g  # noqa: E402
+    from testing.llm_fix_repo.conversion import masse_g  # noqa: E402
 
     assert masse_g == 10000
     clean_after_test()

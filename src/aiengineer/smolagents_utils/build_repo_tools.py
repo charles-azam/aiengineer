@@ -3,10 +3,10 @@ from typing import Callable
 from smolagents import tool
 
 from aiengineer.tools.llm_edit_repo import (
-    call_llm_on_repo,
-    call_llm_on_repo_with_files,
-    call_llm_on_repo_with_folder,
-    fix_repository,
+    llm_edit_repo,
+    llm_edit_files,
+    llm_edit_folder,
+    llm_fix_repo,
     get_repository_map,
     get_python_errors_in_repository,
     get_print_outputs_in_repository,
@@ -83,7 +83,7 @@ def build_repo_tools(
     # ---------------------------------------------------------------------
 
     @tool
-    def fix_repository_tool(
+    def llm_fix_repo_agent(
         additional_context_or_instructions: str = "",
     ) -> str:
         """
@@ -95,7 +95,7 @@ def build_repo_tools(
                 instructions to provide to the LLM for fixing the repository. By default, the llm will only be asked to fix the repository based on the errors it finds.
             
         """
-        result = fix_repository(
+        result = llm_fix_repo(
             repo_path=repo_path,
             litellm_id=litellm_id,
             additional_context_or_instructions=additional_context_or_instructions,
@@ -108,32 +108,32 @@ def build_repo_tools(
             else "No problems detected."
         )
 
-    tools["fix_repository_tool"] = fix_repository_tool
+    tools["llm_fix_repo_agent"] = llm_fix_repo_agent
 
     @tool
-    def call_llm_on_repo_tool(message: str) -> str:
+    def llm_edit_repo_agent(message: str) -> str:
         """
         Run an arbitrary instruction against the entire repo via LLM-powered aider.
         
         Args:
             message: The instruction to run against the repo.
         """
-        call_llm_on_repo(
+        llm_edit_repo(
             message=message,
             repo_path=repo_path,
             litellm_id=litellm_id,
             repo_name=repo_path.name,
             edit_format=edit_format,
         )
-        return "LLM run completed."
+        return None
 
-    tools["call_llm_on_repo_tool"] = call_llm_on_repo_tool
+    tools["llm_edit_repo_agent"] = llm_edit_repo_agent
 
     @tool
-    def call_llm_on_repo_with_files_tool(
+    def llm_edit_files_agent(
         message: str,
         fnames: list[str],
-    ) -> str:
+    ) -> None:
         """
         Run an arbitrary instruction restricted to a list of files (relative paths) of repo via LLM-powered aider.
         
@@ -141,7 +141,7 @@ def build_repo_tools(
             message: The instruction to run against the repo.
             fnames: List of relative paths to files in the repo to restrict the LLM call to.
         """
-        call_llm_on_repo_with_files(
+        llm_edit_files(
             message=message,
             fnames=[repo_path / f for f in fnames],
             repo_path=repo_path,
@@ -149,15 +149,15 @@ def build_repo_tools(
             repo_name=repo_path.name,
             edit_format=edit_format,
         )
-        return "LLM run on selected files completed."
+        return
 
-    tools["call_llm_on_repo_with_files_tool"] = call_llm_on_repo_with_files_tool
+    tools["llm_edit_files_agent"] = llm_edit_files_agent
 
     @tool
-    def call_llm_on_repo_with_folder_tool(
+    def llm_edit_folder_agent(
         message: str,
         folder: str,
-    ) -> str:
+    ) -> None:
         """
         Run an arbitrary instruction restricted to a subfolder of a repo via LLM-powered aider.
         
@@ -165,7 +165,7 @@ def build_repo_tools(
             message: The instruction to run against the repo.
             folder: The name of the subfolder in the repo to restrict the LLM call to.
         """
-        call_llm_on_repo_with_folder(
+        llm_edit_folder(
             message=message,
             folder_path=repo_path / folder,
             repo_path=repo_path,
@@ -173,9 +173,9 @@ def build_repo_tools(
             repo_name=repo_path.name,
             edit_format=edit_format,
         )
-        return "LLM run on folder completed."
+        return
 
-    tools["call_llm_on_repo_with_folder_tool"] = call_llm_on_repo_with_folder_tool
+    tools["llm_edit_folder_agent"] = llm_edit_folder_agent
 
     # ---------------------------------------------------------------------
     # Return the full catalogue

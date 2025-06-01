@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from aiengineer.tools.call_llm_on_repo import (RepoAsObject, call_llm_on_repo,
+from aiengineer.tools.llm_edit_repo import (RepoAsObject, call_llm_on_repo,
                                                fix_repository)
 
 logger = logging.getLogger(__name__)

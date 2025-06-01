@@ -8,7 +8,7 @@ from aiengineer.testing import (TESTING_MODEL, TESTING_PATH, clean_after_test,
                                 initialise_folder_with_docs,
                                 initialise_folder_with_non_working_code,
                                 initialise_folder_with_working_code)
-from aiengineer.tools.call_llm_on_repo import (RepoAsJson, RepoAsObject,
+from aiengineer.tools.llm_edit_repo import (RepoAsJson, RepoAsObject,
                                                call_llm_on_repo,
                                                call_llm_on_repo_with_files,
                                                call_llm_on_repo_with_folder,

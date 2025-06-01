@@ -102,22 +102,26 @@ def build_repo_tools(
     # ---------------------------------------------------------------------
 
     @tool
-    def llm_fix_repo_agent(
-        additional_context_or_instructions: str = "",
+    def llm_fix_repo_tool(
+        optional_instructions: str = "",
     ) -> str:
         """
         Ask an LLM to auto-repair the codebase (imports, NameErrors, etc.).
         Returns a flat text description of problems it attempted to fix.
         
+        This tool returns the python problems in a string. It is the same output as `exec_all_python_files_tool`. 
+        This means that this tool WILL NOT be able to answer any question. So you must give instructions, not questions.
+        This tool can work without `optional_instructions`, but you can provide additional context or instructions to the LLM to help it fix the repository. 
+
         Args:
-            additional_context_or_instructions: Optional additional context or
+            optional_instructions: Optional additional context or
                 instructions to provide to the LLM for fixing the repository. By default, the llm will only be asked to fix the repository based on the errors it finds.
             
         """
         result = llm_fix_repo(
             repo_path=repo_path,
             litellm_id=litellm_id,
-            additional_context_or_instructions=additional_context_or_instructions,
+            additional_context_or_instructions=optional_instructions,
             repo_name=repo_path.name,
             edit_format=edit_format,
         )
@@ -127,7 +131,7 @@ def build_repo_tools(
             else "No problems detected."
         )
 
-    tools["llm_fix_repo_agent"] = llm_fix_repo_agent
+    tools["llm_fix_repo_tool"] = llm_fix_repo_tool
 
     @tool
     def llm_edit_repo_tool(message: str) -> str:
@@ -182,7 +186,5 @@ def build_repo_tools(
     tools["llm_edit_files_tool"] = llm_edit_files_tool
 
 
-    # ---------------------------------------------------------------------
-    # Return the full catalogue
-    # ---------------------------------------------------------------------
+    # TODO: give the direct possibility to modify the files, and use a benchmark to compare
     return tools

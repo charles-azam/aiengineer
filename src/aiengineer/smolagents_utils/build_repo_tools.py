@@ -18,7 +18,7 @@ from aiengineer.smolagents_utils.prompts import get_prompt_aider_smolagents
 def build_repo_tools(
     repo_path: Path,
     litellm_id: str,
-    original_task: str = "",
+    original_task: str,
     edit_format: str = "diff",
     
 ) -> dict[str, Callable]:

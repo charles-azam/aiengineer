@@ -112,7 +112,7 @@ def test_llm_fix_repo():
     assert masse_g == 10000
     clean_after_test()
 
-
+@pytest.mark.no_api
 def test_get_repo_as_json_output():
     initialise_folder_with_non_working_code()
     repo_as_json = get_repo_as_json_output(
@@ -126,7 +126,7 @@ def test_get_repo_as_json_output():
     )
     clean_after_test()
 
-
+@pytest.mark.no_api
 def test_get_python_errors_in_repository():
     initialise_folder_with_non_working_code()
     message = get_python_errors_and_print_outputs_in_repository(repo_path=TESTING_PATH)
@@ -140,7 +140,7 @@ def test_get_python_errors_in_repository():
     assert "No module named 'llm_fix_repo'" in message
     clean_after_test()
 
-
+@pytest.mark.no_api
 def test_get_print_outputs_in_repository():
     initialise_folder_with_non_working_code()
     message = get_print_outputs_in_repository(repo_path=TESTING_PATH)
@@ -156,7 +156,7 @@ def test_get_print_outputs_in_repository():
     assert "No module named 'llm_fix_repo'" not in message
     clean_after_test()
 
-
+@pytest.mark.no_api
 def test_get_repository_map_summary():
     initialise_folder_with_working_code()
     repo_map = get_repository_map(repo_path=TESTING_PATH, summary=True)
@@ -187,6 +187,7 @@ def kg_to_pounds(kg_value):
     pass
     clean_after_test()
 
+@pytest.mark.no_api
 def test_get_repository_map():
     initialise_folder_with_working_code()
     repo_map = get_repository_map(repo_path=TESTING_PATH, summary=False)
@@ -228,6 +229,7 @@ print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
     pass
     clean_after_test()
 
+@pytest.mark.no_api
 def test_get_python_doc_as_markdown():
     doc_path = initialise_folder_with_docs()
     with pytest.raises(ValueError):

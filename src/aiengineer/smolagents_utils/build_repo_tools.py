@@ -83,9 +83,13 @@ def build_repo_tools(
     tools["exec_all_python_files_tool"] = exec_all_python_files_tool
 
     @tool
-    def get_doc_as_markdown_tool(doc_path: str) -> str:
+    def convert_python_doc_to_markdown(doc_path: str) -> str:
         """
         Render a pyforge Python file into markdown.
+        
+        Pyforge is a python library to write documents in python files, which can be rendered into markdown.
+        
+        You can use this tool to convert a Python file that contains pyforge documents into markdown.
         
         **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `doc_path` is `docs/my_doc.py`.
 
@@ -95,7 +99,7 @@ def build_repo_tools(
         """
         return get_python_doc_as_markdown(doc_path=doc_path, repo_path=repo_path)
 
-    tools["get_doc_as_markdown_tool"] = get_doc_as_markdown_tool
+    tools["convert_python_doc_to_markdown"] = convert_python_doc_to_markdown
 
     # ---------------------------------------------------------------------
     # Write / fix helpers (they mutate the repo on disk)

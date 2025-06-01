@@ -8,8 +8,7 @@ from aiengineer.tools.llm_edit_repo import (
     llm_edit_folder,
     llm_fix_repo,
     get_repository_map,
-    get_python_errors_in_repository,
-    get_print_outputs_in_repository,
+    get_python_errors_and_print_outputs_in_repository,
     get_python_doc_as_markdown,
 )
 
@@ -41,7 +40,14 @@ def build_repo_tools(
 
     @tool
     def get_repository_map_tool(summary: bool = False) -> str:
-        """Return a high-level map (files + short summaries) of the repository.
+        """Return a high-level of the repository.
+        This includes the content of each file if you set `summary=False`, or a
+        summary of each file if `summary=True`.
+        
+        This tool, along with the `get_individual_file_content_tool` are the only tools you can use to get access to the content of files in the repository.
+        
+        The files are given relative to the module. If you want to specify a file to another tool, use the same relative path given by this tool.
+        
         
         Args:
             summary: If True, return a summary of each file instead of the full content.
@@ -49,30 +55,43 @@ def build_repo_tools(
         return get_repository_map(repo_path=repo_path, summary=summary)
 
     tools["get_repository_map_tool"] = get_repository_map_tool
-
+    
     @tool
-    def get_python_errors_tool() -> str:
-        """Static-run the repo and list Python errors (import, syntax, runtime)."""
-        return get_python_errors_in_repository(repo_path=repo_path)
+    def get_individual_file_content_tool(file_path: str) -> str:
+        """
+        Return the content of a single file in the repository.
+        
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `file_path` is `docs/my_doc.py`.
+        
+        Args:
+            file_path: Relative path to the file in the repo.
+        """
+        return (repo_path / file_path).read_text()
 
-    tools["get_python_errors_tool"] = get_python_errors_tool
-
+    tools["get_individual_file_content_tool"] = get_individual_file_content_tool
+    
     @tool
-    def get_print_outputs_tool() -> str:
-        """Run the repo’s test harness and return captured stdout / print() output."""
-        return get_print_outputs_in_repository(repo_path=repo_path)
+    def exec_all_python_files_tool() -> str:
+        """
+        Get a list of Python errors and print outputs in the repository.
+        
+        This tool will import all files in the repository and return a flat text with all the stdout and stderr outputs, as well as any Python errors encountered during the import.
+        
+        """
+        return get_python_errors_and_print_outputs_in_repository(repo_path=repo_path)
 
-    tools["get_print_outputs_tool"] = get_print_outputs_tool
+    tools["exec_all_python_files_tool"] = exec_all_python_files_tool
 
     @tool
     def get_doc_as_markdown_tool(doc_path: str) -> str:
         """
         Render a pyforge Python file into markdown.
+        
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `doc_path` is `docs/my_doc.py`.
 
         Args:
             doc_path: Relative path to a .py pyforge doc file.
             
-            If the module name is `my_module`, and the doc file is in `my_module/docs/my_doc.py`, then the expected value for `doc_path` is `docs/my_doc.py`.
         """
         return get_python_doc_as_markdown(doc_path=doc_path, repo_path=repo_path)
 
@@ -111,9 +130,12 @@ def build_repo_tools(
     tools["llm_fix_repo_agent"] = llm_fix_repo_agent
 
     @tool
-    def llm_edit_repo_agent(message: str) -> str:
+    def llm_edit_repo_tool(message: str) -> str:
         """
         Run an arbitrary instruction against the entire repo via LLM-powered aider.
+        
+        This tool returns None, this means that this tool WILL NOT be able to answer any question. So you must give instructions, not questions.
+
         
         Args:
             message: The instruction to run against the repo.
@@ -127,15 +149,21 @@ def build_repo_tools(
         )
         return None
 
-    tools["llm_edit_repo_agent"] = llm_edit_repo_agent
+    tools["llm_edit_repo_tool"] = llm_edit_repo_tool
 
     @tool
-    def llm_edit_files_agent(
+    def llm_edit_files_tool(
         message: str,
         fnames: list[str],
     ) -> None:
         """
         Run an arbitrary instruction restricted to a list of files (relative paths) of repo via LLM-powered aider.
+        
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `fnames` is [`docs/my_doc.py`].
+        
+        If you want to create a new file, just add the file name to the list, e.g. `["folder/new_file.py"]` and specify it to the LLM in the `message` parameter.
+        
+        This tool returns None, this means that this tool WILL NOT be able to answer any question. So you must give instructions, not questions.
         
         Args:
             message: The instruction to run against the repo.
@@ -151,31 +179,8 @@ def build_repo_tools(
         )
         return
 
-    tools["llm_edit_files_agent"] = llm_edit_files_agent
+    tools["llm_edit_files_tool"] = llm_edit_files_tool
 
-    @tool
-    def llm_edit_folder_agent(
-        message: str,
-        folder: str,
-    ) -> None:
-        """
-        Run an arbitrary instruction restricted to a subfolder of a repo via LLM-powered aider.
-        
-        Args:
-            message: The instruction to run against the repo.
-            folder: The name of the subfolder in the repo to restrict the LLM call to.
-        """
-        llm_edit_folder(
-            message=message,
-            folder_path=repo_path / folder,
-            repo_path=repo_path,
-            litellm_id=litellm_id,
-            repo_name=repo_path.name,
-            edit_format=edit_format,
-        )
-        return
-
-    tools["llm_edit_folder_agent"] = llm_edit_folder_agent
 
     # ---------------------------------------------------------------------
     # Return the full catalogue

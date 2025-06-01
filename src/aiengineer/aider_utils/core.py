@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from aiengineer.config import EngineeringConfig
-from aiengineer.tools.engineer_agent import iterative_engineering_process
+from aiengineer.aider_utils.engineer_agent import iterative_engineering_process
 
 
 class EngineeringProject(BaseModel):

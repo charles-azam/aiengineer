@@ -8,7 +8,7 @@ from aiengineer.testing import (TESTING_MODEL, TESTING_PATH, clean_after_test,
 
 
 def test_get_repository_map_tool():
-    from aiengineer.tools.llm_edit_repo import get_repository_map
+    from aiengineer.utils.llm_edit_repo import get_repository_map
 
     model = LiteLLMModel(TESTING_MODEL)
 
@@ -45,7 +45,7 @@ I want you to base your answer only on the answer of get_repository_map_tool. Do
     clean_after_test()
 
 def test_tools_in_dict_smolagents():
-    from aiengineer.tools.llm_edit_repo import get_repository_map
+    from aiengineer.utils.llm_edit_repo import get_repository_map
 
     model = LiteLLMModel(TESTING_MODEL)
 
@@ -87,7 +87,7 @@ I want you to base your answer only on the answer of get_repository_map_tool. Do
     
     
 def test_get_print_outputs_in_repository():
-    from aiengineer.tools.llm_edit_repo import (
+    from aiengineer.utils.llm_edit_repo import (
         get_print_outputs_in_repository)
 
     model = LiteLLMModel(TESTING_MODEL)

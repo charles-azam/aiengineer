@@ -1,4 +1,4 @@
-from aiengineer.tools.parse_repository import RepoAsObject
+from aiengineer.utils.parse_repository import RepoAsObject
 
 _PROMPT_AI_ENGINEER = r"""
 You are a highly specialized hardware engineering assistant. Your currently in an infinite for loop in which you want to keep improving our design. All of your data will be written in python.

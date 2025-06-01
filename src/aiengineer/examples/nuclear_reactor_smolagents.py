@@ -1,7 +1,7 @@
 from smolagents import (CodeAgent, InferenceClientModel, LiteLLMModel,
                         ToolCallingAgent, WebSearchTool, tool)
 
-from aiengineer.smolagents_utils.tools import (
+from aiengineer.utils.tools import (
     ask_coder_fix_the_code_tool, ask_coder_modification_on_repo_tool,
     get_all_print_outputs_tool, get_codebase_as_markdown_tool)
 

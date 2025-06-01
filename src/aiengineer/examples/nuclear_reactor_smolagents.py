@@ -21,7 +21,7 @@ Additionally, outline the necessary infrastructure for manufacturing, assembly, 
 
 CONFIG_REACTOR = EngineeringConfig(
     litellm_id="bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-    iterations=20,
+    iterations=200,
     repo_path=AIENGINEER_SRC_DIR / "reactor",
     prompt=prompt_reactor,
 )

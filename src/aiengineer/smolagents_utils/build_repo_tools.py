@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 from typing import Callable
 from smolagents import tool
 
@@ -11,12 +12,15 @@ from aiengineer.utils.llm_edit_repo import (
     get_python_errors_and_print_outputs_in_repository,
     get_python_doc_as_markdown,
 )
+from aiengineer.smolagents_utils.prompts import get_prompt_aider_smolagents
 
 
 def build_repo_tools(
     repo_path: Path,
     litellm_id: str,
+    original_task: str = "",
     edit_format: str = "diff",
+    
 ) -> dict[str, Callable]:
     """
     Generate a dictionary mapping tool-names → @tool-decorated callables so that a
@@ -31,7 +35,10 @@ def build_repo_tools(
     Returns:
         dict[str, Callable]:  Ready-to-register smolagent tools.
     """
-
+    prompt_aider = get_prompt_aider_smolagents(
+        repo_name=repo_path.name,
+        original_task=original_task,
+    )
     tools: dict[str, Callable] = {}
 
     # ---------------------------------------------------------------------
@@ -128,6 +135,7 @@ def build_repo_tools(
             additional_context_or_instructions=optional_instructions,
             repo_name=repo_path.name,
             edit_format=edit_format,
+            system_context=prompt_aider,
         )
         return (
             result.convert_to_flat_txt()
@@ -154,6 +162,7 @@ def build_repo_tools(
             litellm_id=litellm_id,
             repo_name=repo_path.name,
             edit_format=edit_format,
+            system_context=prompt_aider,
         )
         return None
 
@@ -184,6 +193,7 @@ def build_repo_tools(
             litellm_id=litellm_id,
             repo_name=repo_path.name,
             edit_format=edit_format,
+            system_context=prompt_aider,
         )
         return
 

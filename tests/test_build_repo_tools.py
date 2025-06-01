@@ -41,11 +41,18 @@ def test_build_repo_tools_keys():
 
 def test_repository_map_tool_via_agent():
     initialise_folder_with_working_code()
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    original_task = """
+Explain what the repository does.
+
+Base your answer *only* on get_repository_map_tool. Call it only once and with summary=False. 
+Do **not** try to run Python or gather extra info.
+"""
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
 
     model = LiteLLMModel(TESTING_MODEL)
 
     expected_output = tools["get_repository_map_tool"](summary=False)
+    
 
     agent = CodeAgent(
         tools=[tools["get_repository_map_tool"]],
@@ -53,12 +60,7 @@ def test_repository_map_tool_via_agent():
         max_steps=2,
     )
     agent.run(
-        """
-Explain what the repository does.
-
-Base your answer *only* on get_repository_map_tool. Call it only once and with summary=False. 
-Do **not** try to run Python or gather extra info.
-"""
+        original_task
     )
     messages = agent.write_memory_to_messages()
     tool_responses = get_tool_responses_from_messages(messages)
@@ -71,7 +73,13 @@ Do **not** try to run Python or gather extra info.
 
 def test_print_outputs_tool_via_agent():
     initialise_folder_with_working_code()
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    original_task = """
+Explain what the repository does.
+
+Base your answer *only* on exec_all_python_files_tool. Call it only once and with summary=False. 
+Do **not** try to run Python or gather extra info.
+"""
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
 
     model = LiteLLMModel(TESTING_MODEL)
 
@@ -83,11 +91,7 @@ def test_print_outputs_tool_via_agent():
         max_steps=2,
     )
     agent.run(
-        """
-Explain what the repository does using only exec_all_python_files_tool.
-
-Call the tool **once** – exactly two steps total.
-"""
+        original_task
     )
     messages = agent.write_memory_to_messages()
     tool_responses = get_tool_responses_from_messages(messages)
@@ -102,16 +106,7 @@ Call the tool **once** – exactly two steps total.
 def test_llm_edit_repo_tool():
     testing_dir = TESTING_PATH / "llm_edit_repo"
     initialise_empty_folder(testing_dir)
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
-    model = LiteLLMModel(TESTING_MODEL)
-    
-    agent = CodeAgent(
-        tools=[tools["llm_edit_repo_tool"]],
-        model=model,
-        max_steps=2,
-    )
-    agent.run(
-        '''
+    original_task = '''
 I want you to call the tool llm_edit_repo_tool with the following message:
 
 """
@@ -127,6 +122,17 @@ Create three files in a directory called llm_edit_repo:
 
 Call the tool **once** – exactly two steps total.
 '''
+    
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools["llm_edit_repo_tool"]],
+        model=model,
+        max_steps=2,
+    )
+    agent.run(
+        original_task
     )
 
 
@@ -141,7 +147,12 @@ def test_call_llm_on_repo_with_files():
     # Here it should give the repository map and ask for modifications using this tool
     testing_dir = TESTING_PATH / "test_folder"
     initialise_folder_with_working_code(testing_dir)
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    original_task = """
+I want you to add a variable called twenty_kg_in_pounds in a new file called result.py next to the conversion.py file that will take as value the result of the conversion of 20 kg to pounds.
+
+llm_edit_files_tool is the only way for you to modify the repository.
+"""
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
@@ -150,11 +161,7 @@ def test_call_llm_on_repo_with_files():
         max_steps=10,
     )
     agent.run(
-        '''
-I want you to add a variable called twenty_kg_in_pounds in a new file called result.py next to the conversion.py file that will take as value the result of the conversion of 20 kg to pounds.
-
-llm_edit_files_tool is the only way for you to modify the repository.
-'''
+        original_task
     )
 
 
@@ -166,7 +173,10 @@ llm_edit_files_tool is the only way for you to modify the repository.
 def test_llm_fix_repo_tool_repairs_errors():
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    original_task = """
+I want you to understand the problem and give instructions to fix the repository.
+"""
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
 
 
@@ -176,9 +186,7 @@ def test_llm_fix_repo_tool_repairs_errors():
         max_steps=10,
     )
     agent.run(
-        '''
-I want you to understand the problem and give instructions to fix the repository.
-'''
+        original_task
     )
 
 
@@ -191,7 +199,10 @@ I want you to understand the problem and give instructions to fix the repository
 def test_doc_as_markdown_tool():
     # ask him the summary of a document
     initialise_folder_with_docs()
-    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL)
+    original_task = """
+I want you to give me the content of the document docs.py as markdown.
+"""
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
 
 
@@ -201,9 +212,7 @@ def test_doc_as_markdown_tool():
         max_steps=10,
     )
     output = agent.run(
-        '''
-I want you to give me the content of the document docs.py as markdown.
-'''
+        original_task
     )
 
     assert "| Name    |   Age | City     |" in output

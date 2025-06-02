@@ -14,7 +14,7 @@ After experimenting extensively, I’ve settled on a two-package solution that h
 - **smolagents**  
   I needed an agent framework to coordinate Aider. Many agent libraries introduce so much complexity that I end up reading and rewriting their core logic anyway. In contrast, Smolagents is intentionally lightweight. The codebase is small, the documentation is concise, and its abstractions genuinely accelerate development thanks to its focus on “coding agents.”
 
-By combining Smolagents with Aider, I can have an AI-driven process that monitors repository changes, applies diffs, and incrementally builds out an “engineering object” in code. This setup allows the system to iterate, refactor, and expand itself without manual intervention—moving us toward a truly autonomous engineering workflow.
+By combining smolagents with Aider, I can have an AI-driven process that monitors repository changes, applies diffs, and incrementally builds out an “engineering object” in code. This setup allows the system to iterate, refactor, and expand itself without manual intervention—moving us toward a truly autonomous engineering workflow.
 
 ## Installation
 

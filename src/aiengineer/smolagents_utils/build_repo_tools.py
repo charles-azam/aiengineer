@@ -13,7 +13,7 @@ from aiengineer.utils.llm_edit_repo import (
     get_python_doc_as_markdown,
 )
 from aiengineer.smolagents_utils.prompts import get_prompt_aider_smolagents
-
+from aiengineer.utils.parse_repository import FileAsObject
 
 def build_repo_tools(
     repo_path: Path,
@@ -55,6 +55,8 @@ def build_repo_tools(
         
         The files are given relative to the module. If you want to specify a file to another tool, use the same relative path given by this tool.
         
+        If the module is called `my_module`, then the path will be given as `my_module/docs/my_doc.py`.
+        
         
         Args:
             summary: If True, return a summary of each file instead of the full content.
@@ -68,7 +70,7 @@ def build_repo_tools(
         """
         Return the content of a single file in the repository.
         
-        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `file_path` is `docs/my_doc.py`.
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `file_path` is `my_module/docs/my_doc.py`.
         
         Args:
             file_path: Relative path to the file in the repo.
@@ -98,7 +100,7 @@ def build_repo_tools(
         
         You can use this tool to convert a Python file that contains pyforge documents into markdown.
         
-        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `doc_path` is `docs/my_doc.py`.
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `doc_path` is `my_module/docs/my_doc.py`.
 
         Args:
             doc_path: Relative path to a .py pyforge doc file.
@@ -176,9 +178,9 @@ def build_repo_tools(
         """
         Run an arbitrary instruction restricted to a list of files (relative paths) of repo via LLM-powered aider.
         
-        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `module_name/docs/my_doc.py`, then the expected value for `fnames` is [`docs/my_doc.py`].
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `fnames` is [`my_module/docs/my_doc.py`].
         
-        If you want to create a new file, just add the file name to the list, e.g. `["folder/new_file.py"]` and specify it to the LLM in the `message` parameter.
+        If you want to create a new file, just add the file name to the list, e.g. `["my_module/folder/new_file.py"]` and specify it to the LLM in the `message` parameter.
         
         This tool returns None, this means that this tool WILL NOT be able to answer any question. So you must give instructions, not questions.
         
@@ -188,7 +190,7 @@ def build_repo_tools(
         """
         llm_edit_files(
             message=message,
-            fnames=[repo_path / f for f in fnames],
+            fnames=[FileAsObject._reconstruct_file_path(file_str=f, repo_path=repo_path) for f in fnames],
             repo_path=repo_path,
             litellm_id=litellm_id,
             repo_name=repo_path.name,

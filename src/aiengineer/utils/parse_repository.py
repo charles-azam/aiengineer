@@ -100,13 +100,12 @@ class FileAsObject(BaseModel):
 
     @staticmethod
     def reduce_file_path(file_path: Path, repo_path: Path) -> str:
-        relative_path = file_path.relative_to(repo_path)
+        relative_path = file_path.relative_to(repo_path.parent)
         return str(relative_path)
 
     @staticmethod
     def _reconstruct_file_path(file_str: str, repo_path: Path) -> Path:
-        # TODO: fix this by not including the parent in the path to avoid mistakes
-        return repo_path / Path(file_str)
+        return repo_path.parent / Path(file_str)
 
     def to_file_as_json(self, summary: bool = False) -> FileAsJson:
         if summary:

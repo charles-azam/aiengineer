@@ -27,10 +27,10 @@ def test_call_llm_on_repo():
         message="""
 Create three files in a directory called llm_edit_repo:
 
-1. **a.py** – declare `a = 1`.  
-2. **b.py** – declare `b = 2`.  
-3. **c.py** –  
-   • `import` `a` and `b` using the `my_repo.` prefix.  
+1. **llm_edit_repo/a.py** – declare `a = 1`.  
+2. **llm_edit_repo/b.py** – declare `b = 2`.  
+3. **llm_edit_repo/c.py** –  
+   • `import` `a` and `b`.  
    • declare `c = a + b`.  
    • `print(c)` when the file is run as a script.
 
@@ -52,10 +52,10 @@ def test_call_llm_on_repo_with_files():
         message="""
 Create three files in a directory named llm_edit_files:
 
-1. **a.py** – declare `a = 1`.  
-2. **b.py** – declare `b = 2`.  
-3. **c.py** –  
-   • `import` `a` and `b` using the `my_repo.` prefix.  
+1. **llm_edit_folder/a.py** – declare `a = 1`.  
+2. **llm_edit_folder/b.py** – declare `b = 2`.  
+3. **llm_edit_folder/c.py** –  
+   • `import` `a` and `b`.  
    • declare `c = a + b`.  
    • `print(c)` when the file is run as a script.
 4. **__init__.py** – create an empty file to make the directory importable.
@@ -79,10 +79,10 @@ def test_llm_edit_folder():
         message="""
 Create three files in a directory named llm_edit_folder:
 
-1. **a.py** – declare `a = 1`.  
-2. **b.py** – declare `b = 2`.  
-3. **c.py** –  
-   • `import` `a` and `b` using the `my_repo.` prefix.  
+1. **llm_edit_folder/a.py** – declare `a = 1`.  
+2. **llm_edit_folder/b.py** – declare `b = 2`.  
+3. **llm_edit_folder/c.py** –  
+   • `import` `a` and `b`.  
    • declare `c = a + b`.  
    • `print(c)` when the file is run as a script.
 
@@ -119,10 +119,10 @@ def test_get_repo_as_json_output():
         with_errors=True, with_outputs=True, repo_path=TESTING_PATH
     )
     repo_as_dict = repo_as_json.to_dict()
-    assert "10" in repo_as_dict["llm_fix_repo/values.py"].content
+    assert "10" in repo_as_dict["testing/llm_fix_repo/values.py"].content
     assert (
         "No module named 'llm_fix_repo'"
-        in repo_as_dict["llm_fix_repo/conversion.py"].content
+        in repo_as_dict["testing/llm_fix_repo/conversion.py"].content
     )
     clean_after_test()
 
@@ -131,11 +131,11 @@ def test_get_python_errors_in_repository():
     initialise_folder_with_non_working_code()
     message = get_python_errors_and_print_outputs_in_repository(repo_path=TESTING_PATH)
     assert (
-        """**llm_fix_repo/values.py**: 
+        """**testing/llm_fix_repo/values.py**: 
 10"""
         in message
     )
-    assert "**llm_fix_repo/conversion.py**: " in message
+    assert "**testing/llm_fix_repo/conversion.py**: " in message
     assert "spec.loader.exec_module(module)" in message
     assert "No module named 'llm_fix_repo'" in message
     clean_after_test()
@@ -148,7 +148,7 @@ def test_get_print_outputs_in_repository():
         message.strip()
         == """
 
-**llm_fix_repo/values.py**: 
+**testing/llm_fix_repo/values.py**: 
 10
     """.strip()
     )
@@ -164,20 +164,20 @@ def test_get_repository_map_summary():
         repo_map.strip()
         == """
 
-**__init__.py**: 
+**testing/__init__.py**: 
 
 
-**test_working_code/__init__.py**: 
+**testing/test_working_code/__init__.py**: 
 
 
-**test_working_code/conversion.py**: 
+**testing/test_working_code/conversion.py**: 
 Module Description:
 Conversion module for converting kg to pounds.
 
 Functions:
 def kg_to_pounds(kg_value):
 
-**test_working_code/values.py**: 
+**testing/test_working_code/values.py**: 
 Module Description:
 Variables.
 
@@ -196,13 +196,13 @@ def test_get_repository_map():
         repo_map.strip()
         == '''
 
-**__init__.py**: 
+**testing/__init__.py**: 
 
 
-**test_working_code/__init__.py**: 
+**testing/test_working_code/__init__.py**: 
 
 
-**test_working_code/conversion.py**: 
+**testing/test_working_code/conversion.py**: 
 
 """Conversion module for converting kg to pounds."""
 
@@ -217,7 +217,7 @@ print("DEBUG: conversion.py loaded successfully")
 print(f"DEBUG: 1 kg = {kg_to_pounds(1)} pounds")
 print(f"DEBUG: masse_kg ({masse_kg} kg) = {kg_to_pounds(masse_kg)} pounds")
 
-**test_working_code/values.py**: 
+**testing/test_working_code/values.py**: 
 
 """Variables."""
 
@@ -240,7 +240,7 @@ def test_get_python_doc_as_markdown():
     markdown_2 = get_python_doc_as_markdown(doc_path=doc_path, repo_path=TESTING_PATH)
 
     markdown_str = get_python_doc_as_markdown(
-        doc_path="test_docs/docs.py", repo_path=TESTING_PATH
+        doc_path="testing/test_docs/docs.py", repo_path=TESTING_PATH
     )
     assert markdown_2 == markdown
     assert markdown_str == markdown

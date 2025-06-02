@@ -10,7 +10,7 @@ from aider.coders import Coder
 from aider.io import InputOutput
 from aider.models import Model
 
-from aiengineer.utils.parse_repository import RepoAsJson, RepoAsObject
+from aiengineer.utils.parse_repository import FileAsObject, RepoAsJson, RepoAsObject
 
 logger = logging.getLogger(__name__)
 
@@ -218,12 +218,12 @@ def get_python_doc_as_markdown(doc_path: Path | str, repo_path: Path) -> str:
     from pyforge.cli import markdown
 
     if isinstance(doc_path, Path):
-        doc_path_str = str(doc_path.relative_to(repo_path))
+        doc_path_str = FileAsObject.reduce_file_path(file_path=doc_path, repo_path=repo_path)
     else:
         doc_path_str = doc_path
         doc_path = Path(doc_path)
         if not doc_path.is_absolute():
-            doc_path = repo_path / doc_path
+            doc_path = FileAsObject._reconstruct_file_path(file_str=doc_path, repo_path=repo_path)
 
     repo_as_object = RepoAsObject.from_directory(repo_path=repo_path)
     repo_as_json = repo_as_object.to_repo_as_json()

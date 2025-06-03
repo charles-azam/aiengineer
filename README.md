@@ -103,3 +103,11 @@ The pipeline only checks the tests that do not need an api.
 
 To run all the test: `uv run pytest tests`
 
+## Examples
+
+In the folder `src/aigineer/examples` you will find two files with two interesting examples :
+
+- nuclear_reactor_smolagents: The prompt to create a nuclear reactor based on the Jimmy public information
+- epyr_smolagents: The prompt to create a engineering system based on the Epy public information
+
+The designs are in the folders `src/reactor` and `src/epyr`.

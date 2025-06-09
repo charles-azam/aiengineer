@@ -92,6 +92,7 @@ Create three files in a directory named llm_edit_folder:
     assert c == 3
     clean_after_test()
     
+@pytest.mark.strong_llm_only
 def test_llm_fix_repo():
     initialise_folder_with_non_working_code()
     problems = llm_fix_repo(

@@ -38,7 +38,6 @@ from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools
 def test_build_repo_tools_keys():
     build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task="Test task")
 
-@pytest.mark.api_needed
 def test_repository_map_tool_via_agent():
     initialise_folder_with_working_code()
     original_task = """
@@ -70,7 +69,6 @@ Do **not** try to run Python or gather extra info.
     clean_after_test()
 clean_after_test()
 
-@pytest.mark.api_needed
 def test_print_outputs_tool_via_agent():
     initialise_folder_with_working_code()
     original_task = """
@@ -170,6 +168,7 @@ llm_edit_files_tool is the only way for you to modify the repository.
     assert abs(twenty_kg_in_pounds - 44.0924524) < 1
     clean_after_test()
 
+@pytest.mark.strong_llm_only
 def test_llm_fix_repo_tool_repairs_errors():
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()

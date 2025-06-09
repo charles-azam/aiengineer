@@ -68,7 +68,7 @@ Do **not** try to run Python or gather extra info.
     assert len(tool_responses) == 2
     assert expected_output in tool_responses[0]["content"][0]["text"]
     clean_after_test()
-
+clean_after_test()
 
 @pytest.mark.api_needed
 def test_print_outputs_tool_via_agent():
@@ -76,7 +76,7 @@ def test_print_outputs_tool_via_agent():
     original_task = """
 Explain what the repository does.
 
-Base your answer *only* on exec_all_python_files_tool. Call it only once and with summary=False. 
+Base your answer *only* on exec_all_python_files_tool. Call it only once. 
 Do **not** try to run Python or gather extra info.
 """
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
@@ -96,11 +96,11 @@ Do **not** try to run Python or gather extra info.
     messages = agent.write_memory_to_messages()
     tool_responses = get_tool_responses_from_messages(messages)
 
-    assert len(tool_responses) == 2  # tool call + assistant answer
     tool_output = tool_responses[0]["content"][0]["text"]
 
     assert len(expected_raw) < len(tool_output)
     assert len(tool_output) < len(expected_raw) * 2
+    assert len(tool_responses) == 2  # tool call + assistant answer
     clean_after_test()
 
 def test_llm_edit_repo_tool():
@@ -194,7 +194,7 @@ I want you to understand the problem and give instructions to fix the repository
 
     assert masse_g == 10000
     clean_after_test()
-
+    
 
 def test_doc_as_markdown_tool():
     # ask him the summary of a document

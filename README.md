@@ -74,7 +74,7 @@ Additionally, outline the necessary infrastructure for manufacturing, assembly, 
 
 
 CONFIG_REACTOR = EngineeringConfig(
-    litellm_id="openai/gpt-4o",
+    litellm_id="mistral/mistral-medium-latest",
     iterations=200,
     repo_path=AIENGINEER_SRC_DIR / "reactor",
     prompt=prompt_reactor,

@@ -12,7 +12,7 @@ from smolagents import Message, MessageRole
 from aiengineer.common import AIENGINEER_SRC_DIR
 
 TESTING_PATH = AIENGINEER_SRC_DIR / "testing"
-TESTING_MODEL = "openai/gpt-4o"
+TESTING_MODEL = "mistral/mistral-medium-latest"
 
 
 def generate_testing_folder(testing_path: Path):

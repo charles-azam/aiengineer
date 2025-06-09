@@ -17,6 +17,8 @@ from aiengineer.utils.llm_edit_repo import (
 from aiengineer.smolagents_utils.prompts import get_prompt_aider_smolagents
 from aiengineer.utils.parse_repository import FileAsObject
 
+from aiengineer.smolagents_utils.llm_edit_repo import direct_edit_file_diff, direct_edit_file_whole
+
 def build_repo_tools(
     repo_path: Path,
     litellm_id: str,
@@ -113,7 +115,69 @@ def build_repo_tools(
     tools["convert_python_doc_to_markdown"] = convert_python_doc_to_markdown
 
     # ---------------------------------------------------------------------
-    # Write / fix helpers (they mutate the repo on disk)
+    # Write / fix helpers using simple IO operations
+    # ---------------------------------------------------------------------
+    
+    @tool
+    def edit_file_diff_tool(
+        file_name: str,
+        to_replace:str,
+        replacement: str,
+    ) -> str:
+        """
+        In a specific file, replaces the string in `to_replace` by the string `replacement`.
+        
+        **Always provide paths relative to the module.** You are inside a module. 
+        If the document you want is in `"my_module/docs/my_doc.py"`, then the expected value for `file_name` is `"my_module/docs/my_doc.py"`.
+        
+        If the file does not exist it will be created.
+        
+        Args:
+            file_name (str): name 
+            to_replace (str): string to replace
+            replacement (str): value of replacement
+
+        Returns:
+            str: content of the file
+        """
+        return direct_edit_file_diff(
+            file_path=FileAsObject._reconstruct_file_path(file_str=file_name, repo_path=repo_path),
+            string_to_replace=to_replace,
+            replacement=replacement
+        )
+    
+    tools["edit_file_diff_tool"]
+    
+    @tool
+    def edit_file_whole_tool(
+        file_name: str,
+        new_content:str,
+    ) -> None:
+        """
+        In a specific file, replace the content of the file with new_content.
+        
+        **Always provide paths relative to the module.** You are inside a module. 
+        If the document you want is in `"my_module/docs/my_doc.py"`, then the expected value for `file_name` is `"my_module/docs/my_doc.py"`.
+        
+        If the file does not exist it will be created.
+        
+        This function returns None.
+        
+        Args:
+            file_name (str): name 
+            new_content (str): new content of the file
+
+        """
+        direct_edit_file_whole(
+            file_path=FileAsObject._reconstruct_file_path(file_str=file_name, repo_path=repo_path),
+            new_content=new_content,
+        )
+        return
+    
+    tools["edit_file_whole_tool"]
+    
+    # ---------------------------------------------------------------------
+    # Write / fix helpers using aider
     # ---------------------------------------------------------------------
 
     @tool

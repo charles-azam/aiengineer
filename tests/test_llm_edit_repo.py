@@ -8,11 +8,15 @@ from aiengineer.testing import (TESTING_MODEL, TESTING_PATH, clean_after_test,
                                 initialise_folder_with_docs,
                                 initialise_folder_with_non_working_code,
                                 initialise_folder_with_working_code)
+
+from aiengineer.aider_utils.llm_edit_repo import (
+    llm_edit_repo,
+    llm_edit_files,
+    llm_edit_folder,
+    llm_fix_repo,
+)
+
 from aiengineer.utils.llm_edit_repo import (
-                                               llm_edit_repo,
-                                               llm_edit_files,
-                                               llm_edit_folder,
-                                               llm_fix_repo,
                                                get_print_outputs_in_repository,
                                                get_python_doc_as_markdown,
                                                get_python_errors_and_print_outputs_in_repository,

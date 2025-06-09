@@ -2,12 +2,14 @@ from pathlib import Path
 import sys
 from typing import Callable
 from smolagents import tool
-
-from aiengineer.utils.llm_edit_repo import (
+from aiengineer.aider_utils.llm_edit_repo import (
     llm_edit_repo,
     llm_edit_files,
     llm_edit_folder,
     llm_fix_repo,
+)
+
+from aiengineer.utils.llm_edit_repo import (
     get_repository_map,
     get_python_errors_and_print_outputs_in_repository,
     get_python_doc_as_markdown,

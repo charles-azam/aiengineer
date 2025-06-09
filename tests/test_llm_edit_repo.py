@@ -248,9 +248,22 @@ def test_get_python_doc_as_markdown():
     assert (
         markdown.strip()
         == """
+---
+title: Example PyForge Document
+author: PyForge User
+date: 2025-05-16
+
+---
+
+
+
+
 
 # Introduction
 The system mass is 10 kg.
+
+
+
 
 
 | Name    |   Age | City     |
@@ -264,3 +277,5 @@ Sample data table
     )
     pass
     clean_after_test()
+
+

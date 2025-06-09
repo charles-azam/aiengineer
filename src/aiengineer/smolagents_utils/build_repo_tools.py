@@ -146,7 +146,7 @@ def build_repo_tools(
             replacement=replacement
         )
     
-    tools["edit_file_diff_tool"]
+    tools["edit_file_diff_tool"] = edit_file_diff_tool
     
     @tool
     def edit_file_whole_tool(
@@ -174,7 +174,7 @@ def build_repo_tools(
         )
         return
     
-    tools["edit_file_whole_tool"]
+    tools["edit_file_whole_tool"] = edit_file_whole_tool
     
     # ---------------------------------------------------------------------
     # Write / fix helpers using aider

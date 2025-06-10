@@ -44,7 +44,7 @@ Create three files in a directory called llm_edit_repo:
 1. **a.py** – declare `a = 1`.  
 2. **b.py** – declare `b = 2`.  
 3. **c.py** –  
-   • `import` `a` and `b` using the `my_repo.` prefix.  
+   • `import` `a` and `b` using relative imports.  
    • declare `c = a + b`.  
    • `print(c)` when the file is run as a script.
 '''
@@ -66,8 +66,9 @@ Create three files in a directory called llm_edit_repo:
     from testing.llm_edit_repo.c import a, b, c
 
     assert c == 3
+    clean_after_test()
     
-test_llm_edit_repo_tool()
+    
     
 def test_call_llm_on_repo_with_files():
     

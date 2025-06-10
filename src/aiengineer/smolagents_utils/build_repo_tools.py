@@ -132,6 +132,10 @@ def build_repo_tools(
         
         If the file does not exist it will be created.
         
+        Remember, you are working inside a package. For the python imports, you should use relative imports.
+        
+        The parent folders are also automatically created.
+        
         Args:
             file_name (str): name 
             to_replace (str): string to replace
@@ -161,11 +165,12 @@ def build_repo_tools(
         
         If the file does not exist it will be created.
         
+        Remember, you are working inside a package. For the python imports, you should use relative imports.
+        
         The parent folders are also automatically created.
         
         This function returns None.
         
-        Remember, you are working inside a package. For the python imports, you should use relative imports.
         
         Args:
             file_name (str): name 

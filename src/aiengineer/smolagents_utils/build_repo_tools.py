@@ -141,7 +141,7 @@ def build_repo_tools(
             str: content of the file
         """
         return direct_edit_file_diff(
-            file_path=FileAsObject._reconstruct_file_path(file_str=file_name, repo_path=repo_path),
+            file_path=FileAsObject.reconstruct_file_path_smart(file_str=file_name, repo_path=repo_path),
             string_to_replace=to_replace,
             replacement=replacement
         )
@@ -161,7 +161,11 @@ def build_repo_tools(
         
         If the file does not exist it will be created.
         
+        The parent folders are also automatically created.
+        
         This function returns None.
+        
+        Remember, you are working inside a package. For the python imports, you should use relative imports.
         
         Args:
             file_name (str): name 
@@ -169,7 +173,7 @@ def build_repo_tools(
 
         """
         direct_edit_file_whole(
-            file_path=FileAsObject._reconstruct_file_path(file_str=file_name, repo_path=repo_path),
+            file_path=FileAsObject.reconstruct_file_path_smart(file_str=file_name, repo_path=repo_path),
             new_content=new_content,
         )
         return

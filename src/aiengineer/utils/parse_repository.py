@@ -107,6 +107,14 @@ class FileAsObject(BaseModel):
     def _reconstruct_file_path(file_str: str, repo_path: Path) -> Path:
         return repo_path.parent / Path(file_str)
 
+    @staticmethod
+    def reconstruct_file_path_smart(file_str: str, repo_path: Path) -> Path:
+        file_path = Path(file_str)
+        if file_path.parts[0] == repo_path.name:
+            return repo_path.parent / Path(file_str)
+        else:
+            return repo_path / Path(file_str)
+    
     def to_file_as_json(self, summary: bool = False) -> FileAsJson:
         if summary:
             content = self.file_summary

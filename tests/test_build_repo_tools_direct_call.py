@@ -69,7 +69,40 @@ Create three files in a directory called llm_edit_repo:
     clean_after_test()
     
     
+
+def test_edit_file_whole_diff():
+    testing_dir = TESTING_PATH / "llm_edit_repo"
+    initialise_empty_folder(testing_dir)
+    original_task = '''
+Create three files in a directory called llm_edit_repo using edit_file_diff_tool:
+
+1. **a.py** – declare `a = 1`.  
+2. **b.py** – declare `b = 2`.  
+3. **c.py** –  
+   • `import` `a` and `b`.  
+   • declare `c = a + b`.  
+   • `print(c)` when the file is run as a script.
+'''
     
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools["edit_file_diff_tool"]],
+        model=model,
+        max_steps=4,
+    )
+    agent.run(
+        original_task
+    )
+
+
+    from testing.llm_edit_repo import a, b, c
+    from testing.llm_edit_repo.c import a, b, c
+
+    assert c == 3
+    clean_after_test()
+        
 def test_call_llm_on_repo_with_files():
     
     # Here it should give the repository map and ask for modifications using this tool
@@ -78,13 +111,13 @@ def test_call_llm_on_repo_with_files():
     original_task = """
 I want you to add a variable called twenty_kg_in_pounds in a new file called result.py next to the conversion.py file that will take as value the result of the conversion of 20 kg to pounds.
 
-llm_edit_files_tool is the only way for you to modify the repository.
+edit_file_whole_tool is the only way for you to modify the repository.
 """
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["llm_edit_files_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        tools=[tools["edit_file_whole_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
         model=model,
         max_steps=10,
     )
@@ -98,19 +131,21 @@ llm_edit_files_tool is the only way for you to modify the repository.
     assert abs(twenty_kg_in_pounds - 44.0924524) < 1
     clean_after_test()
 
-@pytest.mark.strong_llm_only
-def test_llm_fix_repo_tool_repairs_errors():
-    # just ask for a simple fix and ask him to give additional instructions to aider
-    initialise_folder_with_non_working_code()
+def test_call_llm_on_repo_with_files_diff():
+    
+    # Here it should give the repository map and ask for modifications using this tool
+    testing_dir = TESTING_PATH / "test_folder"
+    initialise_folder_with_working_code(testing_dir)
     original_task = """
-I want you to understand the problem and give instructions to fix the repository.
+I want you to add a variable called twenty_kg_in_pounds in a new file called result.py next to the conversion.py file that will take as value the result of the conversion of 20 kg to pounds.
+
+edit_file_diff_tool is the only way for you to modify the repository.
 """
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
-
-
+    
     agent = CodeAgent(
-        tools=[tools["llm_fix_repo_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        tools=[tools["edit_file_diff_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
         model=model,
         max_steps=10,
     )
@@ -119,8 +154,8 @@ I want you to understand the problem and give instructions to fix the repository
     )
 
 
-    from testing.llm_fix_repo.conversion import masse_g
+    from testing.test_folder.result import twenty_kg_in_pounds
 
-    assert masse_g == 10000
+    assert abs(twenty_kg_in_pounds - 44.0924524) < 1
     clean_after_test()
     

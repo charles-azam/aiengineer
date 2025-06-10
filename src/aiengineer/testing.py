@@ -12,7 +12,8 @@ from smolagents import Message, MessageRole
 from aiengineer.common import AIENGINEER_SRC_DIR
 
 TESTING_PATH = AIENGINEER_SRC_DIR / "testing"
-TESTING_MODEL = "mistral/mistral-medium-latest"
+# TESTING_MODEL = "mistral/mistral-medium-latest"
+TESTING_MODEL = "deepseek/deepseek-chat"
 
 
 def generate_testing_folder(testing_path: Path):

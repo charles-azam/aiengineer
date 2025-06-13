@@ -39,6 +39,7 @@ def test_build_repo_tools_keys():
     build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task="Test task")
 
 def test_repository_map_tool_via_agent():
+    clean_after_test()
     initialise_folder_with_working_code()
     original_task = """
 Explain what the repository does.
@@ -67,9 +68,9 @@ Do **not** try to run Python or gather extra info.
     assert len(tool_responses) == 2
     assert expected_output in tool_responses[0]["content"][0]["text"]
     clean_after_test()
-clean_after_test()
 
 def test_print_outputs_tool_via_agent():
+    clean_after_test()
     initialise_folder_with_working_code()
     original_task = """
 Explain what the repository does.
@@ -100,8 +101,9 @@ Do **not** try to run Python or gather extra info.
     assert len(tool_output) < len(expected_raw) * 2
     assert len(tool_responses) == 2  # tool call + assistant answer
     clean_after_test()
-
+    
 def test_llm_edit_repo_tool():
+    clean_after_test()
     testing_dir = TESTING_PATH / "llm_edit_repo"
     initialise_empty_folder(testing_dir)
     original_task = '''
@@ -141,7 +143,7 @@ Call the tool **once** – exactly two steps total.
     clean_after_test()
     
 def test_call_llm_on_repo_with_files():
-    
+    clean_after_test()
     # Here it should give the repository map and ask for modifications using this tool
     testing_dir = TESTING_PATH / "test_folder"
     initialise_folder_with_working_code(testing_dir)
@@ -170,6 +172,7 @@ llm_edit_files_tool is the only way for you to modify the repository.
 
 @pytest.mark.strong_llm_only
 def test_llm_fix_repo_tool_repairs_errors():
+    clean_after_test()
     # just ask for a simple fix and ask him to give additional instructions to aider
     initialise_folder_with_non_working_code()
     original_task = """
@@ -196,6 +199,7 @@ I want you to understand the problem and give instructions to fix the repository
     
 
 def test_doc_as_markdown_tool():
+    clean_after_test()
     # ask him the summary of a document
     initialise_folder_with_docs()
     original_task = """

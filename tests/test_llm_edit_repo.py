@@ -189,3 +189,10 @@ def test_exec_file_in_repo():
     assert "DEBUG: 1 kg = 2.20462 pounds" in output
     assert "DEBUG: masse_kg (10 kg) = 22.0462 pounds" in output
     clean_after_test()
+    
+def test_exec_file_in_repo_with_error():
+    initialise_folder_with_non_working_code()
+    output = exec_file_in_repo(file_path="testing/llm_fix_repo/conversion.py", repo_path=TESTING_PATH)
+    assert "No module named 'llm_fix_repo'" in output
+    clean_after_test()
+    

@@ -25,7 +25,21 @@ def get_python_errors_and_print_outputs_in_repository(repo_path: Path) -> str:
         return repo_as_json.convert_to_flat_txt()
     else:
         return ""
-
+    
+def exec_file_in_repo(file_path: str, repo_path: Path) -> str:
+    """
+    Execute a single file in the repository.
+    
+    This function will return the output of the file.
+    
+    If the file raises an error, the error will be returned.
+    
+    Args:
+        file_path: Relative path to the file in the repo.
+    """
+    file_path = FileAsObject._reconstruct_file_path(file_str=file_path, repo_path=repo_path)
+    file_as_object = FileAsObject.from_path(file_path=file_path, repo_path=repo_path)
+    return file_as_object.exec_file(with_outputs=True, with_errors=True)
 
 def get_print_outputs_in_repository(repo_path: Path) -> str:
     repo_as_json = get_repo_as_json_output(

@@ -11,7 +11,8 @@ from aiengineer.utils.llm_edit_repo import (
                                                get_python_doc_as_markdown,
                                                get_python_errors_and_print_outputs_in_repository,
                                                get_repo_as_json_output,
-                                               get_repository_map)
+                                               get_repository_map,
+                                               exec_file_in_repo)
 
 
 @pytest.mark.no_api
@@ -181,3 +182,10 @@ Sample data table
     clean_after_test()
 
 
+def test_exec_file_in_repo():
+    initialise_folder_with_working_code()
+    output = exec_file_in_repo(file_path="testing/test_working_code/conversion.py", repo_path=TESTING_PATH)
+    assert "DEBUG: conversion.py loaded successfully" in output
+    assert "DEBUG: 1 kg = 2.20462 pounds" in output
+    assert "DEBUG: masse_kg (10 kg) = 22.0462 pounds" in output
+    clean_after_test()

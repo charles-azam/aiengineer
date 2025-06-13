@@ -111,3 +111,23 @@ In the folder `src/aigineer/examples` you will find two files with two interesti
 - epyr_smolagents: The prompt to create a engineering system based on the Epy public information
 
 The designs are in the folders `src/reactor` and `src/epyr`.
+
+# TODO
+
+- add those tools:
+  - the tools from smolagents deepsearch for web searching
+  - basic tools to draw, draw line, draw circle, add text, ect...
+  - tool to convert the drawing to png and give it back to the llm
+  - the tool to run a python file (check that it runs, maybe the tool to convert it to markdown is enough, it should return the error)
+  - maybe no quantity for the beginning 
+
+
+I want you to find me the best python library I could use to do engineering drawings. I need to create python functions that will be given to a mcp server as tools. Find me the library and write me the basic python functions that I would need so that a llm can draw basic engineering objects
+
+  https://www.perplexity.ai/search/i-want-you-to-find-me-the-best-1GsEc7rES92z616gVmAjAg
+
+  ==> use matplotlib
+
+create a manager agent that codes and an agent specifically for drawing
+
+Maybe initialize a few python files and make the llm work directly on them. A few files for tools and parameters and a main design.py file. Drawings are obviously a must have.

@@ -13,6 +13,7 @@ from aiengineer.aider_utils.llm_edit_repo import (
     llm_fix_repo,
 )
 
+@pytest.mark.aider
 def test_call_llm_on_repo():
     testing_dir = TESTING_PATH / "llm_edit_repo"
     initialise_empty_folder(testing_dir)
@@ -37,8 +38,7 @@ Create three files in a directory called llm_edit_repo:
     assert c == 3
     clean_after_test()
     
-
-
+@pytest.mark.aider
 def test_call_llm_on_repo_with_files():
     testing_dir = TESTING_PATH / "llm_edit_files"
     initialise_empty_folder(testing_dir)
@@ -66,7 +66,7 @@ Create three files in a directory named llm_edit_files:
     clean_after_test()
     
 
-
+@pytest.mark.aider
 def test_llm_edit_folder():
     testing_dir = TESTING_PATH / "llm_edit_folder"
     initialise_empty_folder(testing_dir)
@@ -92,7 +92,7 @@ Create three files in a directory named llm_edit_folder:
     assert c == 3
     clean_after_test()
     
-@pytest.mark.strong_llm_only
+@pytest.mark.aider
 def test_llm_fix_repo():
     initialise_folder_with_non_working_code()
     problems = llm_fix_repo(

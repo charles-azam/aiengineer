@@ -78,9 +78,9 @@ class FileAsObject(BaseModel):
     def from_path(
         cls,
         file_path: Path,
-        repo_path: RepoAsObject,
-        file_content: str,
-        file_summary: str,
+        repo_path: Path,
+        file_content: str | None = None,
+        file_summary: str | None = None,
     ):
         file_path_str = FileAsObject.reduce_file_path(
             file_path=file_path, repo_path=repo_path
@@ -121,6 +121,51 @@ class FileAsObject(BaseModel):
         else:
             content = self.file_content
         return FileAsJson(name=self.file_path_str, content=content)
+    
+    def exec_file(self, with_outputs: bool = False, with_errors: bool = True) -> str:
+        content = ""
+        file_path = self.file_path
+        module_name = (
+            file_path.relative_to(self.repo_path)
+            .with_suffix("")
+            .as_posix()
+            .replace("/", ".")
+        )
+        output_buffer = io.StringIO()  # Buffer to capture printed output
+        original_stdout = sys.stdout  # Save original stdout
+        try:
+            # Redirect stdout to the buffer
+            sys.stdout = output_buffer
+
+            # Dynamically load the Python file
+            spec = importlib.util.spec_from_file_location(
+                module_name, str(file_path)
+            )
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            # Capture success message and output*
+            output = output_buffer.getvalue()
+            if output and with_outputs:
+                content += output
+        except Exception as e:
+            # Capture error message and output
+            output = output_buffer.getvalue()
+            output_message = ""
+            if output:
+                output_message = f"STDOUT:\n{output_buffer.getvalue()}"
+            error = f"Error: {traceback.format_exc()}\n{output_message}"
+            if with_errors:
+                content += error
+        finally:
+            # Restore original stdout
+            sys.stdout = original_stdout
+            output_buffer.close()
+            if len(content) > 0:
+                return content
+            else:
+                return None
+
 
 
 class RepoAsObject(BaseModel):
@@ -219,48 +264,9 @@ class RepoAsObject(BaseModel):
         results = []
 
         for file in self.files:
-            content = ""
-            file_path = file.file_path
-            module_name = (
-                file_path.relative_to(self.repo_path)
-                .with_suffix("")
-                .as_posix()
-                .replace("/", ".")
-            )
-            output_buffer = io.StringIO()  # Buffer to capture printed output
-            original_stdout = sys.stdout  # Save original stdout
-            file_name = file.file_path_str
-            try:
-                # Redirect stdout to the buffer
-                sys.stdout = output_buffer
-
-                # Dynamically load the Python file
-                spec = importlib.util.spec_from_file_location(
-                    module_name, str(file_path)
-                )
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-
-                # Capture success message and output*
-                output = output_buffer.getvalue()
-                if output and with_outputs:
-                    content += output
-            except Exception as e:
-                # Capture error message and output
-                output = output_buffer.getvalue()
-                output_message = ""
-                if output:
-                    output_message = f"STDOUT:\n{output_buffer.getvalue()}"
-                error = f"Error: {traceback.format_exc()}\n{output_message}"
-                if with_errors:
-                    content += error
-            finally:
-                # Restore original stdout
-                sys.stdout = original_stdout
-                output_buffer.close()
-                if len(content) > 0:
-                    results.append(FileAsJson(name=file_name, content=content))
-
+            content = file.exec_file(with_outputs=with_outputs, with_errors=with_errors)
+            if content:
+                results.append(FileAsJson(name=file.file_path_str, content=content))
         if results:
             return RepoAsJson(files=results)
         else:

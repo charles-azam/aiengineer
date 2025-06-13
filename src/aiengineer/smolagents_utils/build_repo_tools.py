@@ -13,6 +13,7 @@ from aiengineer.utils.llm_edit_repo import (
     get_repository_map,
     get_python_errors_and_print_outputs_in_repository,
     get_python_doc_as_markdown,
+    exec_file_in_repo,
 )
 from aiengineer.smolagents_utils.prompts import get_prompt_aider_smolagents
 from aiengineer.utils.parse_repository import FileAsObject
@@ -82,6 +83,22 @@ def build_repo_tools(
         return (repo_path / file_path).read_text()
 
     tools["get_individual_file_content_tool"] = get_individual_file_content_tool
+    
+    @tool
+    def exec_file_tool(file_path: str) -> str:
+        """
+        Execute a single file in the repository.
+        
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `file_path` is `my_module/docs/my_doc.py`.
+
+        
+        Args:
+            file_path: Relative path to the file in the repo.
+        """
+        return exec_file_in_repo(file_path=file_path, repo_path=repo_path)
+    
+    tools["exec_file_tool"] = exec_file_tool
+    
     
     @tool
     def exec_all_python_files_tool() -> str:

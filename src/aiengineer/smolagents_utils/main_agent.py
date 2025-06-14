@@ -3,7 +3,7 @@ from smolagents import CodeAgent, LiteLLMModel, DuckDuckGoSearchTool, VisitWebpa
 from aiengineer.smolagents_utils.prompts import get_prompt_ai_engineer_smolagents
 from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools
 
-def create_smolagents_engineer(config: EngineeringConfig) -> tuple[CodeAgent, str]:
+def create_smolagents_engineer_with_aider(config: EngineeringConfig) -> tuple[CodeAgent, str]:
     """
     Create a smolagent that can engineer a repository using the `pyforge` library.
 

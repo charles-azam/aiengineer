@@ -1,6 +1,6 @@
 from aiengineer.config import EngineeringConfig
 from aiengineer.common import AIENGINEER_SRC_DIR
-from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer
+from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer_with_aider
 
 prompt_reactor = """
 Design a modular high-temperature gas-cooled reactor (HTGR) system to decarbonizing industrial heat production. The system should:
@@ -28,7 +28,7 @@ CONFIG_REACTOR = EngineeringConfig(
 
 
 if __name__ == "__main__":
-    smolagent_engineer, prompt = create_smolagents_engineer(CONFIG_REACTOR)
+    smolagent_engineer, prompt = create_smolagents_engineer_with_aider(CONFIG_REACTOR)
 
     smolagent_engineer.run(prompt)
     

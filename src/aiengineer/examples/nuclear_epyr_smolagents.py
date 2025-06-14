@@ -1,6 +1,6 @@
 from aiengineer.config import EngineeringConfig
 from aiengineer.common import AIENGINEER_SRC_DIR
-from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer
+from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer_with_aider
 from aiengineer.testing import initialise_empty_folder
 
 prompt = """
@@ -17,7 +17,7 @@ CONFIG_EPYR = EngineeringConfig(
 
 
 if __name__ == "__main__":
-    smolagent_engineer, prompt = create_smolagents_engineer(CONFIG_EPYR)
+    smolagent_engineer, prompt = create_smolagents_engineer_with_aider(CONFIG_EPYR)
 
     smolagent_engineer.run(prompt)
     

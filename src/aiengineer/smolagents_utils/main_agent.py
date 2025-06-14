@@ -2,6 +2,7 @@ from aiengineer.config import EngineeringConfig
 from smolagents import CodeAgent, LiteLLMModel, DuckDuckGoSearchTool, VisitWebpageTool
 from aiengineer.smolagents_utils.prompts import get_prompt_ai_engineer_smolagents, get_prompt_ai_engineer_smolagents_one_file
 from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools, RepoTool
+from pathlib import Path
 
 def create_smolagents_engineer_with_aider(config: EngineeringConfig) -> tuple[CodeAgent, str]:
     """
@@ -47,13 +48,22 @@ def create_smolagents_engineer_v2(config: EngineeringConfig, method = "diff") ->
     iterations = config.iterations
     prompt = config.prompt
     
+    def initialise_repo_smolagents_engineer_v2(repo_path: Path) -> None:
+        """
+        Initialise a repository for the smolagents engineer.
+        """
+        repo_path.mkdir(parents=True, exist_ok=True)
+        (repo_path / "design.py").touch()
+    
+    initialise_repo_smolagents_engineer_v2(repo_path)
+    
     tools = build_repo_tools(repo_path=repo_path, litellm_id=litellm_id, original_task=prompt)
     
     diff_tool = RepoTool.EDIT_FILE_DIFF
     if method == "whole":
         diff_tool = RepoTool.EDIT_FILE_WHOLE
     
-    useful_tools_names = [
+    useful_tools_names: list[RepoTool] = [
         diff_tool,
         RepoTool.EXEC_FILE,
         RepoTool.EXEC_ALL_PYTHON_FILES,
@@ -76,3 +86,4 @@ def create_smolagents_engineer_v2(config: EngineeringConfig, method = "diff") ->
         additional_authorized_imports=["matplotlib.*", "numpy.*", "scipy.*", "pandas.*", "sympy.*"]
 
     ), prompt
+    

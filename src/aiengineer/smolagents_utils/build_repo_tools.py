@@ -66,15 +66,16 @@ def build_repo_tools(
     @tool
     def get_repository_map_tool(summary: bool = False) -> str:
         """Return a high-level of the repository.
-        This includes the content of each file if you set `summary=False`, or a
+        This includes the content of each python file if you set `summary=False`, or a
         summary of each file if `summary=True`.
         
-        This tool, along with the `get_individual_file_content_tool` are the only tools you can use to get access to the content of files in the repository.
+        This tool, along with the `get_individual_file_content_tool` are the only tools you can use to get access to the content of python files in the repository.
+        
+        To convert a python file to markdown, you can use the `convert_python_doc_to_markdown` tool.
         
         The files are given relative to the module. If you want to specify a file to another tool, use the same relative path given by this tool.
         
         If the module is called `my_module`, then the path will be given as `my_module/docs/my_doc.py`.
-        
         
         Args:
             summary: If True, return a summary of each file instead of the full content.
@@ -162,10 +163,9 @@ def build_repo_tools(
         If the document you want is in `"my_module/docs/my_doc.py"`, then the expected value for `file_name` is `"my_module/docs/my_doc.py"`.
         
         If the file does not exist it will be created.
+        The parent folders are automatically created.
         
-        Remember, you are working inside a package. For the python imports, you should use relative imports.
-        
-        The parent folders are also automatically created.
+        For the python imports to other files in this project, you should use relative imports.
         
         Args:
             file_name (str): name 
@@ -195,10 +195,9 @@ def build_repo_tools(
         If the document you want is in `"my_module/docs/my_doc.py"`, then the expected value for `file_name` is `"my_module/docs/my_doc.py"`.
         
         If the file does not exist it will be created.
+        The parent folders are automatically created.
         
-        Remember, you are working inside a package. For the python imports, you should use relative imports.
-        
-        The parent folders are also automatically created.
+        For the python imports to other files in this project, you should use relative imports.
         
         This function returns None.
         

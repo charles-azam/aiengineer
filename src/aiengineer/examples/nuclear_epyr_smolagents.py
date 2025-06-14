@@ -1,6 +1,6 @@
 from aiengineer.config import EngineeringConfig
 from aiengineer.common import AIENGINEER_SRC_DIR
-from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer_with_aider
+from aiengineer.smolagents_utils.main_agent import create_smolagents_engineer_v2
 from aiengineer.testing import initialise_empty_folder
 
 prompt = """
@@ -9,7 +9,7 @@ I want you to find all the information you can on the EPYR startup and to try to
 
 
 CONFIG_EPYR = EngineeringConfig(
-    litellm_id="openai/gpt-4o",
+    litellm_id="deepseek/deepseek-chat",
     iterations=20,
     repo_path=AIENGINEER_SRC_DIR / "epyr",
     prompt=prompt,
@@ -17,7 +17,7 @@ CONFIG_EPYR = EngineeringConfig(
 
 
 if __name__ == "__main__":
-    smolagent_engineer, prompt = create_smolagents_engineer_with_aider(CONFIG_EPYR)
+    smolagent_engineer, prompt = create_smolagents_engineer_v2(CONFIG_EPYR)
 
     smolagent_engineer.run(prompt)
     

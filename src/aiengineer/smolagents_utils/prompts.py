@@ -160,7 +160,7 @@ Here is the original task given to your manager:
 
 PROMPT_SMOLAGENT_ONE_FILE = """
 ---
-SCIENTIFIC SYSTEM DESIGN AGENT – AI ENGINEERING PROGRAMME
+SCIENTIFIC SYSTEM DESIGN AGENT – AI ENGINEERING PROGRAMME - repository: {repo_name}
 ---
 
 # Role
@@ -355,9 +355,9 @@ def get_prompt_ai_engineer_smolagents_one_file(repo_name: str, task: str) -> str
     example_document = (ROOT_PYFORGE_DIR / "src/pyforge/docs/complex_doc.py").read_text()
     
 
-    return PROMPT_SMOLAGENT.format(
+    return PROMPT_SMOLAGENT_ONE_FILE.format(
         repo_name=repo_name,
-        example_document=example_document,
+        content_document=example_document,
         task=task,
     )
     

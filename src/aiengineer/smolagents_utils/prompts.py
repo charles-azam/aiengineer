@@ -352,12 +352,12 @@ def get_prompt_ai_engineer_smolagents(repo_name: str, task: str) -> str:
 def get_prompt_ai_engineer_smolagents_one_file(repo_name: str, task: str) -> str:
     from pyforge.common import ROOT_PYFORGE_DIR
 
-    example_document = (ROOT_PYFORGE_DIR / "src/pyforge/docs/complex_doc.py").read_text()
+    example_document = (ROOT_PYFORGE_DIR / "docs/complex_doc.py").read_text()
     
 
     return PROMPT_SMOLAGENT_ONE_FILE.format(
         repo_name=repo_name,
-        content_document=example_document,
+        content_example=example_document,
         task=task,
     )
     

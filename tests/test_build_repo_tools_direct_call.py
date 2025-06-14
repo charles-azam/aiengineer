@@ -179,3 +179,28 @@ def test_exec_file_tool():
     assert "DEBUG: masse_kg (10 kg) = 22.0462 pounds" in result
     clean_after_test()
     
+def test_delete_file_tool():
+    testing_dir = TESTING_PATH / "test_folder"
+    initialise_folder_with_working_code(testing_dir)
+    original_task = "Delete conversion.py"
+    
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools[RepoTool.DELETE_FILE.value]],
+        model=model,
+        max_steps=1,
+    )
+    
+    # First verify the file exists
+    file_path = "test_folder/conversion.py"
+    assert (TESTING_PATH / file_path).exists()
+    
+    # Delete the file
+    result = agent.run(f"Delete the file {file_path}")
+    
+    # Verify the file was deleted
+    assert not (TESTING_PATH / file_path).exists()
+    
+    clean_after_test()

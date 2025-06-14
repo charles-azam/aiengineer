@@ -66,7 +66,6 @@ Create three files in a directory called llm_edit_repo:
     assert c == 3
     clean_after_test()
     
-    
 
 def test_edit_file_whole_diff():
     testing_dir = TESTING_PATH / "llm_edit_repo"
@@ -160,7 +159,7 @@ edit_file_diff_tool is the only way for you to modify the repository.
 def test_exec_file_tool():
     testing_dir = TESTING_PATH / "test_folder"
     initialise_folder_with_working_code(testing_dir)
-    original_task = "Test executing a file"
+    original_task = "Test executing a file and give me the output"
     
     tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
     model = LiteLLMModel(TESTING_MODEL)
@@ -175,6 +174,8 @@ def test_exec_file_tool():
     result = agent.run("Execute the file testing/test_folder/conversion.py")
     
     # The file should have printed the conversion result
-    assert "20 kg is equal to 44.0924524 pounds" in result
+    assert "DEBUG: conversion.py loaded successfully" in result
+    assert "DEBUG: 1 kg = 2.20462 pounds" in result
+    assert "DEBUG: masse_kg (10 kg) = 22.0462 pounds" in result
     clean_after_test()
     

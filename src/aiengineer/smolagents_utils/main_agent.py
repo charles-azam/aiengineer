@@ -70,11 +70,11 @@ def create_smolagents_engineer_v2(config: EngineeringConfig, method = "diff") ->
         RepoTool.CONVERT_PYTHON_DOC_TO_MARKDOWN,
         RepoTool.GET_REPOSITORY_MAP,
         RepoTool.GET_INDIVIDUAL_FILE_CONTENT,
-        DuckDuckGoSearchTool(),
-        VisitWebpageTool()
     ]
     
     useful_tools = [tools[tool_name.value] for tool_name in useful_tools_names]
+    useful_tools.append(DuckDuckGoSearchTool())
+    useful_tools.append(VisitWebpageTool())
 
     
     prompt = get_prompt_ai_engineer_smolagents_one_file(repo_name=repo_path.name, task=prompt)

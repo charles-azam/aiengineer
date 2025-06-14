@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 from typing import Callable
+from enum import Enum, auto
 from smolagents import tool
 from aiengineer.aider_utils.llm_edit_repo import (
     llm_edit_repo,
@@ -20,12 +21,23 @@ from aiengineer.utils.parse_repository import FileAsObject
 
 from aiengineer.smolagents_utils.llm_edit_repo import direct_edit_file_diff, direct_edit_file_whole
 
+class RepoTool(Enum):
+    GET_REPOSITORY_MAP = "get_repository_map_tool"
+    GET_INDIVIDUAL_FILE_CONTENT = "get_individual_file_content_tool"
+    EXEC_FILE = "exec_file_tool"
+    EXEC_ALL_PYTHON_FILES = "exec_all_python_files_tool"
+    CONVERT_PYTHON_DOC_TO_MARKDOWN = "convert_python_doc_to_markdown"
+    EDIT_FILE_DIFF = "edit_file_diff_tool"
+    EDIT_FILE_WHOLE = "edit_file_whole_tool"
+    LLM_FIX_REPO = "llm_fix_repo_tool"
+    LLM_EDIT_REPO = "llm_edit_repo_tool"
+    LLM_EDIT_FILES = "llm_edit_files_tool"
+
 def build_repo_tools(
     repo_path: Path,
     litellm_id: str,
     original_task: str,
     edit_format: str = "diff",
-    
 ) -> dict[str, Callable]:
     """
     Generate a dictionary mapping tool-names → @tool-decorated callables so that a
@@ -68,7 +80,7 @@ def build_repo_tools(
         """
         return get_repository_map(repo_path=repo_path, summary=summary)
 
-    tools["get_repository_map_tool"] = get_repository_map_tool
+    tools[RepoTool.GET_REPOSITORY_MAP.value] = get_repository_map_tool
     
     @tool
     def get_individual_file_content_tool(file_path: str) -> str:
@@ -82,7 +94,7 @@ def build_repo_tools(
         """
         return (repo_path / file_path).read_text()
 
-    tools["get_individual_file_content_tool"] = get_individual_file_content_tool
+    tools[RepoTool.GET_INDIVIDUAL_FILE_CONTENT.value] = get_individual_file_content_tool
     
     @tool
     def exec_file_tool(file_path: str) -> str:
@@ -97,7 +109,7 @@ def build_repo_tools(
         """
         return exec_file_in_repo(file_path=file_path, repo_path=repo_path)
     
-    tools["exec_file_tool"] = exec_file_tool
+    tools[RepoTool.EXEC_FILE.value] = exec_file_tool
     
     
     @tool
@@ -110,7 +122,7 @@ def build_repo_tools(
         """
         return get_python_errors_and_print_outputs_in_repository(repo_path=repo_path)
 
-    tools["exec_all_python_files_tool"] = exec_all_python_files_tool
+    tools[RepoTool.EXEC_ALL_PYTHON_FILES.value] = exec_all_python_files_tool
 
     @tool
     def convert_python_doc_to_markdown(doc_path: str) -> str:
@@ -129,7 +141,7 @@ def build_repo_tools(
         """
         return get_python_doc_as_markdown(doc_path=doc_path, repo_path=repo_path)
 
-    tools["convert_python_doc_to_markdown"] = convert_python_doc_to_markdown
+    tools[RepoTool.CONVERT_PYTHON_DOC_TO_MARKDOWN.value] = convert_python_doc_to_markdown
 
     # ---------------------------------------------------------------------
     # Write / fix helpers using simple IO operations
@@ -167,7 +179,7 @@ def build_repo_tools(
             replacement=replacement
         )
     
-    tools["edit_file_diff_tool"] = edit_file_diff_tool
+    tools[RepoTool.EDIT_FILE_DIFF.value] = edit_file_diff_tool
     
     @tool
     def edit_file_whole_tool(
@@ -200,7 +212,7 @@ def build_repo_tools(
         )
         return
     
-    tools["edit_file_whole_tool"] = edit_file_whole_tool
+    tools[RepoTool.EDIT_FILE_WHOLE.value] = edit_file_whole_tool
     
     # ---------------------------------------------------------------------
     # Write / fix helpers using aider
@@ -237,7 +249,7 @@ def build_repo_tools(
             else "No problems detected."
         )
 
-    tools["llm_fix_repo_tool"] = llm_fix_repo_tool
+    tools[RepoTool.LLM_FIX_REPO.value] = llm_fix_repo_tool
 
     @tool
     def llm_edit_repo_tool(message: str) -> str:
@@ -260,7 +272,7 @@ def build_repo_tools(
         )
         return None
 
-    tools["llm_edit_repo_tool"] = llm_edit_repo_tool
+    tools[RepoTool.LLM_EDIT_REPO.value] = llm_edit_repo_tool
 
     @tool
     def llm_edit_files_tool(
@@ -291,8 +303,6 @@ def build_repo_tools(
         )
         return
 
-    tools["llm_edit_files_tool"] = llm_edit_files_tool
+    tools[RepoTool.LLM_EDIT_FILES.value] = llm_edit_files_tool
 
-
-    # TODO: give the direct possibility to modify the files, and use a benchmark to compare
     return tools

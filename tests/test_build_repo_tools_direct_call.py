@@ -31,9 +31,7 @@ from aiengineer.testing import (
     get_tool_responses_from_messages
 )
 
-
-from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools
-
+from aiengineer.smolagents_utils.build_repo_tools import build_repo_tools, RepoTool
 
 def test_llm_edit_repo_tool():
     testing_dir = TESTING_PATH / "llm_edit_repo"
@@ -53,7 +51,7 @@ Create three files in a directory called llm_edit_repo:
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["edit_file_whole_tool"]],
+        tools=[tools[RepoTool.EDIT_FILE_WHOLE.value]],
         model=model,
         max_steps=2,
     )
@@ -88,7 +86,7 @@ Create three files in a directory called llm_edit_repo using edit_file_diff_tool
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["edit_file_diff_tool"]],
+        tools=[tools[RepoTool.EDIT_FILE_DIFF.value]],
         model=model,
         max_steps=4,
     )
@@ -117,7 +115,7 @@ edit_file_whole_tool is the only way for you to modify the repository.
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["edit_file_whole_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        tools=[tools[RepoTool.EDIT_FILE_WHOLE.value], tools[RepoTool.GET_REPOSITORY_MAP.value], tools[RepoTool.EXEC_ALL_PYTHON_FILES.value]],
         model=model,
         max_steps=10,
     )
@@ -145,7 +143,7 @@ edit_file_diff_tool is the only way for you to modify the repository.
     model = LiteLLMModel(TESTING_MODEL)
     
     agent = CodeAgent(
-        tools=[tools["edit_file_diff_tool"], tools["get_repository_map_tool"], tools["exec_all_python_files_tool"]],
+        tools=[tools[RepoTool.EDIT_FILE_DIFF.value], tools[RepoTool.GET_REPOSITORY_MAP.value], tools[RepoTool.EXEC_ALL_PYTHON_FILES.value]],
         model=model,
         max_steps=10,
     )
@@ -157,5 +155,26 @@ edit_file_diff_tool is the only way for you to modify the repository.
     from testing.test_folder.result import twenty_kg_in_pounds
 
     assert abs(twenty_kg_in_pounds - 44.0924524) < 1
+    clean_after_test()
+
+def test_exec_file_tool():
+    testing_dir = TESTING_PATH / "test_folder"
+    initialise_folder_with_working_code(testing_dir)
+    original_task = "Test executing a file"
+    
+    tools = build_repo_tools(TESTING_PATH, litellm_id=TESTING_MODEL, original_task=original_task)
+    model = LiteLLMModel(TESTING_MODEL)
+    
+    agent = CodeAgent(
+        tools=[tools[RepoTool.EXEC_FILE.value]],
+        model=model,
+        max_steps=1,
+    )
+    
+    # Execute the conversion.py file which should print the conversion result
+    result = agent.run("Execute the file testing/test_folder/conversion.py")
+    
+    # The file should have printed the conversion result
+    assert "20 kg is equal to 44.0924524 pounds" in result
     clean_after_test()
     

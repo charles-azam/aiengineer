@@ -119,7 +119,9 @@ The designs are in the folders `src/reactor` and `src/epyr`.
   - basic tools to draw, draw line, draw circle, add text, ect...
   - tool to convert the drawing to png and give it back to the llm
   - the tool to run a python file (check that it runs, maybe the tool to convert it to markdown is enough, it should return the error)
-  - maybe no quantity for the beginning 
+  - maybe no quantity for the beginning
+
+- call black on each file after edit
 
 
 I want you to find me the best python library I could use to do engineering drawings. I need to create python functions that will be given to a mcp server as tools. Find me the library and write me the basic python functions that I would need so that a llm can draw basic engineering objects

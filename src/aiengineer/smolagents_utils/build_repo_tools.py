@@ -32,6 +32,7 @@ class RepoTool(Enum):
     LLM_FIX_REPO = "llm_fix_repo_tool"
     LLM_EDIT_REPO = "llm_edit_repo_tool"
     LLM_EDIT_FILES = "llm_edit_files_tool"
+    DELETE_FILE = "delete_file_tool"
 
 def build_repo_tools(
     repo_path: Path,
@@ -99,7 +100,8 @@ def build_repo_tools(
     @tool
     def exec_file_tool(file_path: str) -> str:
         """
-        Execute a single file in the repository.
+        Execute a single file in the repository. Returns the stdout and stderr outputs, as well as any Python errors encountered during the import.
+        All the prints in the file or in the imports will be returned
         
         **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `file_path` is `my_module/docs/my_doc.py`.
 
@@ -304,5 +306,30 @@ def build_repo_tools(
         return
 
     tools[RepoTool.LLM_EDIT_FILES.value] = llm_edit_files_tool
+
+    @tool
+    def delete_file_tool(file_path: str) -> str:
+        """
+        Delete a file from the repository.
+        
+        **Always provide paths relative to the module.** You are inside a module. If the document you want is in `my_module/docs/my_doc.py`, then the expected value for `file_path` is `my_module/docs/my_doc.py`.
+        
+        Args:
+            file_path: Relative path to the file in the repo to delete.
+            
+        Returns:
+            str: A message indicating whether the file was successfully deleted or not.
+        """
+        try:
+            full_path = FileAsObject.reconstruct_file_path_smart(file_str=file_path, repo_path=repo_path)
+            if full_path.exists():
+                full_path.unlink()
+                return f"Successfully deleted file: {file_path}"
+            else:
+                return f"File not found: {file_path}"
+        except Exception as e:
+            return f"Error deleting file {file_path}: {str(e)}"
+
+    tools[RepoTool.DELETE_FILE.value] = delete_file_tool
 
     return tools

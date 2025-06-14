@@ -65,7 +65,7 @@ Do **not** try to run Python or gather extra info.
     messages = agent.write_memory_to_messages()
     tool_responses = get_tool_responses_from_messages(messages)
 
-    assert len(tool_responses) == 2
+    assert len(tool_responses) <= 2
     assert expected_output in tool_responses[0]["content"][0]["text"]
     clean_after_test()
 

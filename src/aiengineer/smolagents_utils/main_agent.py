@@ -83,7 +83,7 @@ def create_smolagents_engineer_v2(config: EngineeringConfig, method = "diff") ->
         tools=useful_tools,
         model=LiteLLMModel(litellm_id),
         max_steps=iterations,
-        additional_authorized_imports=["matplotlib.*", "numpy.*", "scipy.*", "pandas.*", "sympy.*"]
+        additional_authorized_imports=["*"]
 
     ), prompt
     

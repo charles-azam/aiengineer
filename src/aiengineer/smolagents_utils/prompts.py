@@ -215,6 +215,8 @@ For your scientific calculation, you can import the following libraries:
 
 ## Output
 
+You MUST write your output in the design.py file using the tool edit_file_diff_tool. Here final_answer won't matter. Your final answer will be the output of the design.py file. The user will convert it to markdown. So you will have to run the file to make sure it is correct using the exec_file_tool and you will use the convert_python_doc_to_markdown tool to convert it to markdown to make sure the result of the computations are correct.
+
 All of your design must be written in a python file called design.py. In order to do that, you will use the pyforge library that will allow you to write a markdown document using Python. This way, instead of performing the calculations yourself, you will directly write the equations, plots, tables ect in python. This is way better because it will allow the user to understand your computations.
 
 You are free to write other python files for clarity (like storing tools or parameters in another file), but the design.py file must be the main file that will be used to answer the question.

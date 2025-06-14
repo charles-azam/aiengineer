@@ -112,24 +112,15 @@ In the folder `src/aigineer/examples` you will find two files with two interesti
 
 The designs are in the folders `src/reactor` and `src/epyr`.
 
-# TODO
+# Thought and progress:
 
-- add those tools:
-  - the tools from smolagents deepsearch for web searching
-  - basic tools to draw, draw line, draw circle, add text, ect...
-  - tool to convert the drawing to png and give it back to the llm
-  - the tool to run a python file (check that it runs, maybe the tool to convert it to markdown is enough, it should return the error)
-  - maybe no quantity for the beginning
+## thoughts
+- using Aider was a bad idea, it would work for a big repository and for coding but in that case aider invents too much and most information is not relevant
+- asking smolagent to write the document as python is not a great idea, he is very likely to make mistake while writing the instruction and it takes double the memory. It would work for a python project but not really for this althoug I still believe that having a python file in the outcome is a good solution
 
+
+
+## ideas
 - call black on each file after edit
-
-
-I want you to find me the best python library I could use to do engineering drawings. I need to create python functions that will be given to a mcp server as tools. Find me the library and write me the basic python functions that I would need so that a llm can draw basic engineering objects
-
-  https://www.perplexity.ai/search/i-want-you-to-find-me-the-best-1GsEc7rES92z616gVmAjAg
-
-  ==> use matplotlib
-
-create a manager agent that codes and an agent specifically for drawing
-
-Maybe initialize a few python files and make the llm work directly on them. A few files for tools and parameters and a main design.py file. Drawings are obviously a must have.
+- add the possibility for the llm to read an image and write images using matplotlib for engineering drawings
+- finally probably that will smolagents, the best thing to do is probably to go back to deepsearch from aymeric; but I still need to mix the final report with python code

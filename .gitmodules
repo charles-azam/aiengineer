@@ -1,3 +1,6 @@
 [submodule "pyforge"]
 	path = pyforge
 	url = https://github.com/charles-azam/pyforge.git
+[submodule "smolagents"]
+	path = smolagents
+	url = https://github.com/charles-azam/smolagents.git

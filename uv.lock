@@ -178,7 +178,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.7.0" },
     { name = "scipy", specifier = ">=1.15.3" },
     { name = "selenium", specifier = ">=4.32.0" },
-    { name = "smolagents", extras = ["bedrock", "gradio", "telemetry", "toolkit"], specifier = ">=1.16.0" },
+    { name = "smolagents", extras = ["bedrock", "gradio", "telemetry", "toolkit"], editable = "smolagents" },
     { name = "sympy", specifier = ">=1.14.0" },
     { name = "typer", extras = ["all"], specifier = ">=0.9.0" },
 ]
@@ -3074,8 +3074,8 @@ wheels = [
 
 [[package]]
 name = "smolagents"
-version = "1.17.0"
-source = { registry = "https://pypi.org/simple" }
+version = "1.19.0.dev0"
+source = { editable = "smolagents" }
 dependencies = [
     { name = "huggingface-hub" },
     { name = "jinja2" },
@@ -3083,10 +3083,6 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "rich" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/b3/f3/1572c767e40353409c3b7d002a009b978013bd74c63d93fc96650eee3d49/smolagents-1.17.0.tar.gz", hash = "sha256:8d4ec4ccb759986560299e5489eab530282c68a4110820919d13a69e642f2b5b", size = 177215 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c0/c0/43c4cd2a98943992dbee705cbcfc57d6da89e4d75860bb379dc1e2fa1f33/smolagents-1.17.0-py3-none-any.whl", hash = "sha256:b6b7853d454c24c949cb306858523e97792310b9ab422a61cba5ccbab48f01c1", size = 133973 },
 ]
 
 [package.optional-dependencies]
@@ -3106,6 +3102,58 @@ toolkit = [
     { name = "duckduckgo-search" },
     { name = "markdownify" },
 ]
+
+[package.metadata]
+requires-dist = [
+    { name = "accelerate", marker = "extra == 'transformers'" },
+    { name = "arize-phoenix", marker = "extra == 'telemetry'" },
+    { name = "boto3", marker = "extra == 'bedrock'", specifier = ">=1.36.18" },
+    { name = "docker", marker = "extra == 'docker'", specifier = ">=7.1.0" },
+    { name = "duckduckgo-search", marker = "extra == 'toolkit'", specifier = ">=6.3.7" },
+    { name = "e2b-code-interpreter", marker = "extra == 'e2b'", specifier = ">=1.0.3" },
+    { name = "gradio", marker = "extra == 'gradio'", specifier = ">=5.14.0" },
+    { name = "helium", marker = "extra == 'vision'" },
+    { name = "huggingface-hub", specifier = ">=0.31.2" },
+    { name = "ipython", marker = "extra == 'test'", specifier = ">=8.31.0" },
+    { name = "jinja2", specifier = ">=3.1.4" },
+    { name = "litellm", marker = "extra == 'litellm'", specifier = ">=1.60.2" },
+    { name = "markdownify", marker = "extra == 'toolkit'", specifier = ">=0.14.1" },
+    { name = "mcp", marker = "extra == 'mcp'" },
+    { name = "mcpadapt", marker = "extra == 'mcp'", specifier = ">=0.1.8" },
+    { name = "mlx-lm", marker = "extra == 'mlx-lm'" },
+    { name = "numpy", marker = "extra == 'torch'", specifier = ">=1.21.2" },
+    { name = "openai", marker = "extra == 'openai'", specifier = ">=1.58.1" },
+    { name = "openinference-instrumentation-smolagents", marker = "extra == 'telemetry'", specifier = ">=0.1.4" },
+    { name = "opentelemetry-exporter-otlp", marker = "extra == 'telemetry'" },
+    { name = "opentelemetry-sdk", marker = "extra == 'telemetry'" },
+    { name = "pandas", marker = "extra == 'test'", specifier = ">=2.2.3" },
+    { name = "pillow", specifier = ">=10.0.1" },
+    { name = "pytest", marker = "extra == 'test'", specifier = ">=8.1.0" },
+    { name = "pytest-datadir", marker = "extra == 'test'" },
+    { name = "python-dotenv" },
+    { name = "python-dotenv", marker = "extra == 'e2b'", specifier = ">=1.0.1" },
+    { name = "python-dotenv", marker = "extra == 'test'", specifier = ">=1.0.1" },
+    { name = "rank-bm25", marker = "extra == 'test'" },
+    { name = "requests", specifier = ">=2.32.3" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "ruff", marker = "extra == 'quality'", specifier = ">=0.9.0" },
+    { name = "selenium", marker = "extra == 'vision'" },
+    { name = "smolagents", extras = ["all"], marker = "extra == 'test'" },
+    { name = "smolagents", extras = ["audio", "docker", "e2b", "gradio", "litellm", "mcp", "mlx-lm", "openai", "telemetry", "toolkit", "transformers", "vision", "bedrock"], marker = "extra == 'all'" },
+    { name = "smolagents", extras = ["quality", "test"], marker = "extra == 'dev'" },
+    { name = "smolagents", extras = ["torch"], marker = "extra == 'audio'" },
+    { name = "smolagents", extras = ["torch"], marker = "extra == 'transformers'" },
+    { name = "soundfile", marker = "extra == 'audio'" },
+    { name = "sqlalchemy", marker = "extra == 'dev'" },
+    { name = "torch", marker = "extra == 'torch'" },
+    { name = "torch", marker = "extra == 'vllm'" },
+    { name = "torchvision", marker = "extra == 'torch'" },
+    { name = "transformers", marker = "extra == 'transformers'", specifier = ">=4.0.0" },
+    { name = "vllm", marker = "extra == 'vllm'" },
+    { name = "websocket-client", marker = "extra == 'docker'" },
+    { name = "wikipedia-api", marker = "extra == 'test'", specifier = ">=0.8.1" },
+]
+provides-extras = ["bedrock", "torch", "audio", "docker", "e2b", "gradio", "litellm", "mcp", "mlx-lm", "openai", "telemetry", "toolkit", "transformers", "vision", "vllm", "all", "quality", "test", "dev"]
 
 [[package]]
 name = "sniffio"

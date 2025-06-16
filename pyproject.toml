@@ -42,4 +42,4 @@ override-dependencies = ["huggingface-hub>=0.31.2"]
 
 [tool.uv.sources]
 pyforge = { path = "./pyforge", editable = true }
-smolagents = { path = "../smolagents", editable = true }
+smolagents = { path = "./smolagents", editable = true }

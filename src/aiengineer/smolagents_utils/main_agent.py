@@ -87,3 +87,12 @@ def create_smolagents_engineer_v2(config: EngineeringConfig, method = "diff") ->
 
     ), prompt
     
+def create_smolagents_engineer_v3(config: EngineeringConfig) -> tuple[CodeAgent, str]:
+    """
+    Let's go back from aymeric's deepsearch code.
+    """
+    
+    repo_path = config.repo_path
+    litellm_id = config.litellm_id
+    iterations = config.iterations
+    prompt = config.prompt
